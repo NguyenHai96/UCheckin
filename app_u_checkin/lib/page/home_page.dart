@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:math';
 
 import 'package:app_u_checkin/model/working_week.dart';
 import 'package:app_u_checkin/note/date_time.dart';
@@ -20,90 +20,91 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<WorkingDay> dataDay = [];
-  String weekTitle = '';
+  late PageController _pageController;
   List<WorkingWeek> dataWeek = [];
+  String weekTitle = '';
+  int _currentIndex = 0;
 
   getDateTimeWork() {
     DateTime now = DateTime.now();
     var startDate = now.subtract(Duration(days: now.weekday - 1));
     var endDate = now.add(Duration(days: 7 - now.weekday));
-    getWeekTitle(now);
 
+    setState(() {
+      dataWeek.add(getNowWeek(now));
+      dataWeek.add(getNextWeek(endDate));
+      dataWeek.insert(0, getLastWeek(startDate));
+    });
+  }
+
+  String getWeekState() {
+    weekTitle = dataWeek[_currentIndex].getWeekTitle();
+    return weekTitle;
+  }
+
+  WorkingWeek getNowWeek(DateTime date) {
+    WorkingWeek week = WorkingWeek.init();
+    List<WorkingDay> listWeekNow = [];
+    var startDate = date.subtract(Duration(days: date.weekday - 1));
     final items = List<DateTime>.generate(7, (i) {
-      DateTime date = startDate;
-      return date.add(Duration(days: i));
+      DateTime list = startDate;
+      return list.add(Duration(days: i));
     });
-
-    String formattedHour = DateFormat('HH:mm').format(now);
-    String nextformattedHour =
-        DateFormat('HH:mm').format(now.add(Duration(hours: 9)));
-
-    List<WorkingDay> newList1 = [];
     for (int i = 0; i < items.length; i++) {
-      newList1.add(WorkingDay(
-        date: items[i],
-        checkin: formattedHour,
-        checkout: nextformattedHour,
-      ));
+      listWeekNow.add(WorkingDay(
+          date: items[i],
+          checkin: DateFormat('HH:mm').format(date),
+          checkout: DateFormat('HH:mm').format(date.add(Duration(hours: 9)))));
     }
-
-    List<WorkingDay> newList2 = [];
-    List<DateTime> nextItems = getNextWeek(endDate);
-    for (int i = 0; i < nextItems.length; i++) {
-      newList2.add(WorkingDay(
-          date: nextItems[i],
-          checkin: formattedHour,
-          checkout: nextformattedHour));
-    }
-
-    List<WorkingDay> newList = [];
-    List<DateTime> lastItems = getNextWeek(startDate);
-    for (int i = 0; i < lastItems.length; i++) {
-      newList2.add(WorkingDay(
-          date: lastItems[i],
-          checkin: formattedHour,
-          checkout: nextformattedHour));
-    }
-
-    setState(() {
-      dataWeek.add(WorkingWeek(dayOfWeek: newList));
-      dataWeek.add(WorkingWeek(dayOfWeek: newList1));
-      dataWeek.add(WorkingWeek(dayOfWeek: newList2));
-    });
-    log("$dataWeek");
+    week.dayOfWeek.addAll(listWeekNow);
+    return week;
   }
 
-  getWeekTitle(DateTime date) {
-    var week = date.weekOfMonth;
-    String formattedMonthYear = DateFormat('MMMM yyyy').format(date);
-    setState(() {
-      weekTitle = 'Week ${week} ${formattedMonthYear}';
-    });
-  }
-
-  getLastWeek(DateTime date) {
-    List<DateTime> list = [];
+  WorkingWeek getLastWeek(DateTime date) {
+    WorkingWeek week = WorkingWeek.init();
+    List<WorkingDay> listWeekLast = [];
     for (int i = 7; i > 0; i--) {
       var beforeDay = date.subtract(Duration(days: i));
-      list.add(beforeDay);
+      listWeekLast.add(WorkingDay(
+          date: beforeDay,
+          checkin: DateFormat('HH:mm').format(date),
+          checkout: DateFormat('HH:mm').format(date.add(Duration(hours: 9)))));
     }
-    return list;
+    week.dayOfWeek.addAll(listWeekLast);
+    return week;
   }
 
-  getNextWeek(DateTime date) {
-    List<DateTime> list = [];
+  WorkingWeek getNextWeek(DateTime date) {
+    WorkingWeek week = WorkingWeek.init();
+    List<WorkingDay> listWeekNext = [];
     for (int i = 1; i <= 7; i++) {
       var behindDay = date.add(Duration(days: i));
-
-      list.add(behindDay);
+      listWeekNext.add(WorkingDay(
+          date: behindDay,
+          checkin: DateFormat('HH:mm').format(date),
+          checkout: DateFormat('HH:mm').format(date.add(Duration(hours: 9)))));
     }
-    return list;
+    week.dayOfWeek.addAll(listWeekNext);
+    return week;
+  }
+
+  getLastWeekArrow(int index) async {
+    var data = await getLastWeek(dataWeek[0].dayOfWeek.first.date!);
+    setState(() {
+      dataWeek.insert(0, data);
+      _currentIndex = index;
+    });
+    // - Timf ngay dau tien
+    // - lấy ngày đầu tiên để tìm ra danh sách các ngày của tuần trước
+    // - insert tuần đó vào list dataWeek ở vị trí 0
+    // - setState lại list dataweek.
+    // - setState lại current.//
   }
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     getDateTimeWork();
   }
 
@@ -352,29 +353,52 @@ class _HomePageState extends State<HomePage> {
                                               width: 24.w,
                                               height: 24.h,
                                               child: InkWell(
-                                                onTap: () {},
+                                                onTap: () {
+                                                  getLastWeekArrow(
+                                                      _currentIndex);
+                                                  _pageController.animateToPage(
+                                                      --_currentIndex,
+                                                      duration: Duration(
+                                                          milliseconds: 20),
+                                                      curve:
+                                                          Curves.bounceInOut);
+                                                },
                                                 child: Image.asset(
                                                     AppAssets.leftArrow),
                                               ),
                                             ),
                                             Expanded(
                                               child: Container(
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  weekTitle,
-                                                  style: TextStyle(
-                                                      fontFamily: FontFamily
-                                                          .bai_jamjuree,
-                                                      fontSize: 16.sp,
-                                                      color: Colors.black),
-                                                ),
-                                              ),
+                                                  alignment: Alignment.center,
+                                                  child: SizedBox(
+                                                    child: Text(
+                                                      getWeekState(),
+                                                      style: TextStyle(
+                                                          fontFamily: FontFamily
+                                                              .bai_jamjuree,
+                                                          fontSize: 16.sp,
+                                                          color: Colors.black),
+                                                    ),
+                                                  )),
                                             ),
                                             Container(
                                               width: 24.w,
                                               height: 24.h,
                                               child: InkWell(
-                                                onTap: () {},
+                                                onTap: () async {
+                                                  dataWeek.add(
+                                                      await getNextWeek(dataWeek
+                                                          .last
+                                                          .dayOfWeek
+                                                          .last
+                                                          .date!));
+                                                  _pageController.animateToPage(
+                                                      ++_currentIndex,
+                                                      duration: Duration(
+                                                          milliseconds: 20),
+                                                      curve:
+                                                          Curves.bounceInOut);
+                                                },
                                                 child: Image.asset(
                                                     AppAssets.rightArrow),
                                               ),
@@ -459,16 +483,25 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 265.h,
+                        SizedBox(height: 12.h),
+                        Expanded(
                           child: PageView.builder(
+                              controller: _pageController,
+                              onPageChanged: (i) {
+                                setState(() {
+                                  _currentIndex = i;
+                                });
+                              },
                               itemCount: dataWeek.length,
                               itemBuilder: (context, i) {
                                 return Container(
-                                  child: ListView.builder(
-                                      addAutomaticKeepAlives: false,
-                                      shrinkWrap: true,
+                                  child: ListView.separated(
+                                      padding: EdgeInsets.only(top: 0.h),
                                       itemCount: dataWeek[i].dayOfWeek.length,
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(
+                                            height: 8.h,
+                                          ),
                                       itemBuilder: (context, index) {
                                         double work = convertString(dataWeek[i]
                                                 .dayOfWeek[index]
@@ -480,7 +513,6 @@ class _HomePageState extends State<HomePage> {
                                         dataWeek[i].dayOfWeek[index].workTime =
                                             work.toPrecision(2);
                                         return Container(
-                                            margin: EdgeInsets.only(top: 8.h),
                                             width: 358.w,
                                             height: 31.h,
                                             decoration: BoxDecoration(
