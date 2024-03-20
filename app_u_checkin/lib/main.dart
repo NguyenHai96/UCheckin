@@ -1,3 +1,4 @@
+import 'package:app_u_checkin/page/check_in_page.dart';
 import 'package:app_u_checkin/page/home_page.dart';
 import 'package:app_u_checkin/page/login_page.dart';
 import 'package:flutter/material.dart';

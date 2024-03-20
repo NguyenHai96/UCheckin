@@ -1,15 +1,11 @@
-import 'dart:math';
-
 import 'package:app_u_checkin/model/working_week.dart';
-import 'package:app_u_checkin/note/date_time.dart';
+import 'package:app_u_checkin/page/check_in_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,10 +18,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late PageController _pageController;
   List<WorkingWeek> dataWeek = [];
-  String weekTitle = '';
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
-  getDateTimeWork() {
+  getDateTimeWork() async {
     DateTime now = DateTime.now();
     var startDate = now.subtract(Duration(days: now.weekday - 1));
     var endDate = now.add(Duration(days: 7 - now.weekday));
@@ -35,11 +30,6 @@ class _HomePageState extends State<HomePage> {
       dataWeek.add(getNextWeek(endDate));
       dataWeek.insert(0, getLastWeek(startDate));
     });
-  }
-
-  String getWeekState() {
-    weekTitle = dataWeek[_currentIndex].getWeekTitle();
-    return weekTitle;
   }
 
   WorkingWeek getNowWeek(DateTime date) {
@@ -88,24 +78,55 @@ class _HomePageState extends State<HomePage> {
     return week;
   }
 
-  getLastWeekArrow(int index) async {
-    var data = await getLastWeek(dataWeek[0].dayOfWeek.first.date!);
-    setState(() {
-      dataWeek.insert(0, data);
-      _currentIndex = index;
-    });
-    // - Timf ngay dau tien
-    // - lấy ngày đầu tiên để tìm ra danh sách các ngày của tuần trước
-    // - insert tuần đó vào list dataWeek ở vị trí 0
-    // - setState lại list dataweek.
-    // - setState lại current.//
+  handlePreviousButtonTapped() async {
+    _currentIndex--;
+    if (_currentIndex <= 0) {
+      if (dataWeek.isNotEmpty && dataWeek[0].dayOfWeek.first.date != null) {
+        var lastWeek = await getLastWeek(dataWeek[0].dayOfWeek.first.date!);
+        _currentIndex = 1;
+        setState(() {
+          dataWeek.insert(0, lastWeek);
+        });
+      }
+    } else {
+      _pageController.animateToPage(_currentIndex,
+          duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+    }
+  }
+
+  handleNextButtonTapped() async {
+    _currentIndex++;
+    if (_currentIndex >= dataWeek.length - 1) {
+      if (dataWeek.isNotEmpty && dataWeek.last.dayOfWeek.last.date != null) {
+        var nextWeek = await getNextWeek(dataWeek.last.dayOfWeek.last.date!);
+        setState(() {
+          dataWeek.add(nextWeek);
+        });
+      }
+    }
+    _pageController.animateToPage(_currentIndex,
+        duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+  }
+
+  String getWeekState() {
+    var weekTitle = "";
+    if (_currentIndex < dataWeek.length) {
+      weekTitle = dataWeek[_currentIndex].getWeekTitle();
+    }
+    return weekTitle;
   }
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
     getDateTimeWork();
+    _pageController = PageController(initialPage: _currentIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -200,28 +221,36 @@ class _HomePageState extends State<HomePage> {
                                   offset: Offset(1, 3),
                                   blurRadius: 2.6)
                             ]),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 32.w,
-                                height: 32.h,
-                                child: Image.asset(
-                                  AppAssets.checkIn,
-                                  fit: BoxFit.cover,
-                                )),
-                            Padding(
-                              padding: EdgeInsets.only(top: 8.h),
-                              child: Text(
-                                'Checkin',
-                                style: TextStyle(
-                                  color: AppColors.text,
-                                  fontFamily: FontFamily.bai_jamjuree,
-                                  fontSize: 14.sp,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => PageCheckIn()));
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  width: 32.w,
+                                  height: 32.h,
+                                  child: Image.asset(
+                                    AppAssets.checkIn,
+                                    fit: BoxFit.cover,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8.h),
+                                child: Text(
+                                  'Checkin',
+                                  style: TextStyle(
+                                    color: AppColors.text,
+                                    fontFamily: FontFamily.bai_jamjuree,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       Container(
@@ -354,14 +383,7 @@ class _HomePageState extends State<HomePage> {
                                               height: 24.h,
                                               child: InkWell(
                                                 onTap: () {
-                                                  getLastWeekArrow(
-                                                      _currentIndex);
-                                                  _pageController.animateToPage(
-                                                      --_currentIndex,
-                                                      duration: Duration(
-                                                          milliseconds: 20),
-                                                      curve:
-                                                          Curves.bounceInOut);
+                                                  handlePreviousButtonTapped();
                                                 },
                                                 child: Image.asset(
                                                     AppAssets.leftArrow),
@@ -385,19 +407,8 @@ class _HomePageState extends State<HomePage> {
                                               width: 24.w,
                                               height: 24.h,
                                               child: InkWell(
-                                                onTap: () async {
-                                                  dataWeek.add(
-                                                      await getNextWeek(dataWeek
-                                                          .last
-                                                          .dayOfWeek
-                                                          .last
-                                                          .date!));
-                                                  _pageController.animateToPage(
-                                                      ++_currentIndex,
-                                                      duration: Duration(
-                                                          milliseconds: 20),
-                                                      curve:
-                                                          Curves.bounceInOut);
+                                                onTap: () {
+                                                  handleNextButtonTapped();
                                                 },
                                                 child: Image.asset(
                                                     AppAssets.rightArrow),
@@ -625,6 +636,6 @@ double convertString(String? input) {
   return output;
 }
 
-extension Ex on double {
-  double toPrecision(int n) => double.parse(toStringAsFixed(n));
-}
+// extension Ex on double {
+//   double toPrecision(int n) => double.parse(toStringAsFixed(n));
+// }
