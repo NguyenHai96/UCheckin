@@ -11,4 +11,5 @@ class AppAssets {
   static final String checkIn = imagePath + 'checkin.png';
   static final String makeDayOff = imagePath + 'make_day_off.png';
   static final String overtime = imagePath + 'ot.png';
+  static final String ucheckin = imagePath + 'u_checkin.png';
 }

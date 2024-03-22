@@ -1,7 +1,6 @@
 import 'package:app_u_checkin/model/working_week.dart';
 import 'package:app_u_checkin/page/check_in_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
-import 'package:intl/intl.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
@@ -19,16 +18,18 @@ class _HomePageState extends State<HomePage> {
   late PageController _pageController;
   List<WorkingWeek> dataWeek = [];
   int _currentIndex = 1;
+  DateTime systemTime() => DateTime.now();
 
   getDateTimeWork() async {
     DateTime now = DateTime.now();
     var startDate = now.subtract(Duration(days: now.weekday - 1));
     var endDate = now.add(Duration(days: 7 - now.weekday));
-
+    List<WorkingWeek> newList = [];
+    newList.add(getNowWeek(now));
+    newList.add(getNextWeek(endDate));
+    newList.insert(0, getLastWeek(startDate));
     setState(() {
-      dataWeek.add(getNowWeek(now));
-      dataWeek.add(getNextWeek(endDate));
-      dataWeek.insert(0, getLastWeek(startDate));
+      dataWeek.addAll(newList);
     });
   }
 
@@ -42,9 +43,7 @@ class _HomePageState extends State<HomePage> {
     });
     for (int i = 0; i < items.length; i++) {
       listWeekNow.add(WorkingDay(
-          date: items[i],
-          checkin: DateFormat('HH:mm').format(date),
-          checkout: DateFormat('HH:mm').format(date.add(Duration(hours: 9)))));
+          date: items[i], checkin: systemTime(), checkout: systemTime()));
     }
     week.dayOfWeek.addAll(listWeekNow);
     return week;
@@ -56,9 +55,7 @@ class _HomePageState extends State<HomePage> {
     for (int i = 7; i > 0; i--) {
       var beforeDay = date.subtract(Duration(days: i));
       listWeekLast.add(WorkingDay(
-          date: beforeDay,
-          checkin: DateFormat('HH:mm').format(date),
-          checkout: DateFormat('HH:mm').format(date.add(Duration(hours: 9)))));
+          date: beforeDay, checkin: systemTime(), checkout: systemTime()));
     }
     week.dayOfWeek.addAll(listWeekLast);
     return week;
@@ -70,9 +67,7 @@ class _HomePageState extends State<HomePage> {
     for (int i = 1; i <= 7; i++) {
       var behindDay = date.add(Duration(days: i));
       listWeekNext.add(WorkingDay(
-          date: behindDay,
-          checkin: DateFormat('HH:mm').format(date),
-          checkout: DateFormat('HH:mm').format(date.add(Duration(hours: 9)))));
+          date: behindDay, checkin: systemTime(), checkout: systemTime()));
     }
     week.dayOfWeek.addAll(listWeekNext);
     return week;
@@ -514,15 +509,15 @@ class _HomePageState extends State<HomePage> {
                                             height: 8.h,
                                           ),
                                       itemBuilder: (context, index) {
-                                        double work = convertString(dataWeek[i]
-                                                .dayOfWeek[index]
-                                                .checkout) -
-                                            convertString(dataWeek[i]
-                                                .dayOfWeek[index]
-                                                .checkin) -
-                                            1;
-                                        dataWeek[i].dayOfWeek[index].workTime =
-                                            work.toPrecision(2);
+                                        // double work = convertString(dataWeek[i]
+                                        //         .dayOfWeek[index]
+                                        //         .checkout) -
+                                        //     convertString(dataWeek[i]
+                                        //         .dayOfWeek[index]
+                                        //         .checkin) -
+                                        //     1;
+                                        // dataWeek[i].dayOfWeek[index].workTime =
+                                        //     work.toPrecision(2);
                                         return Container(
                                             width: 358.w,
                                             height: 31.h,
@@ -590,18 +585,7 @@ class _HomePageState extends State<HomePage> {
                                                         .isWeekend(),
                                                     child: Center(
                                                         child: Text(
-                                                      '${dataWeek[i].dayOfWeek[index].workTime}',
-                                                      style: TextStyle(
-                                                          fontFamily: FontFamily
-                                                              .bai_jamjuree,
-                                                          fontSize: 14.sp,
-                                                          color: dataWeek[i]
-                                                                      .dayOfWeek[
-                                                                          index]
-                                                                      .workTime! <
-                                                                  8
-                                                              ? Colors.red
-                                                              : AppColors.text),
+                                                      '${dataWeek[i].dayOfWeek[index]}',
                                                     )),
                                                   ),
                                                 ),
