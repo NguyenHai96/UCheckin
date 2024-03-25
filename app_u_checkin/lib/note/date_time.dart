@@ -125,3 +125,9 @@ String convertMonth(int month) {
       return '';
   }
 }
+
+ // try {
+      //   checkoutDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkoutString);
+      // } on FormatException catch (e) {
+      //   log("error : ${e.message}");
+      // }

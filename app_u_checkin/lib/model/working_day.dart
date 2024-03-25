@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
@@ -12,21 +13,57 @@ class WorkingDay {
   WorkingDay({this.date, this.checkin, this.checkout});
 
   factory WorkingDay.fromJson(Map<String, dynamic> json) {
+    String dateString;
+    if (json['date'] != null) {
+      dateString = json['date'] as String;
+    } else {
+      dateString = '';
+    }
+    String checkinString;
+    if (json['checkin'] != null) {
+      checkinString = json['checkin'] as String;
+    } else {
+      checkinString = '';
+    }
+    String? checkoutString = null;
+
+    if (json['checkout'] != null && json['checkout'] != 'null') {
+      checkoutString = json['checkout'] as String;
+    }
+
+    DateTime checkDate = DateFormat("yyyy-MM-dd hh:mm").parse(dateString);
+    DateTime checkinDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkinString);
+    DateTime? checkoutDate = null;
+    if (checkoutString != null) {
+      checkoutDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkoutString);
+    }
+
     return WorkingDay(
-        date: json['name'] as DateTime,
-        checkin: json['checkin'] as DateTime,
-        checkout: json['checkout'] as DateTime);
+        date: checkDate, checkin: checkinDate, checkout: checkoutDate);
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'date': date,
-      'checkin': checkin,
-      'checkout': checkout,
+      'date': date.toString(),
+      'checkin': checkin.toString(),
+      'checkout': checkout.toString(),
     };
   }
 
+  Map<String, dynamic> encodeMap(Map<String, dynamic> map) {
+    map.forEach((key, value) {
+      if (value is DateTime) {
+        map[key] = value.toString();
+      }
+    });
+    return map;
+  }
+
   DateTime systemTime() => DateTime.now();
+
+  DateTime getDataDateTime(String date) {
+    return DateTime.parse(date);
+  }
 
   String getDateString() {
     if (date != null) {
@@ -93,11 +130,36 @@ class WorkingDay {
 
   double resultWorkTime() {
     if (checkin != null && checkout != null) {
-      int startTime = (checkin!.hour * 60) + checkin!.minute;
-      int endTime = (checkout!.hour * 60) + checkout!.minute;
-      var result = (endTime - startTime) / 60 - 1;
-      print(result);
-      return result.toPrecision(2);
+      int result = 0;
+      if (checkin!.hour > 7 && checkin!.hour < 13 && checkout!.hour > 12) {
+        result = checkout!.difference(checkin!).inMinutes - 60;
+      } else {
+        if (checkin!.hour > 7 && checkout!.hour < 12) {
+          result = checkout!.difference(checkin!).inMinutes;
+        } else {
+          if (checkin!.hour > 12 && checkout!.hour > 12) {
+            result = checkout!.difference(checkin!).inMinutes;
+          }
+        }
+      }
+      int hour = result ~/ 60;
+      int residue = result % 60;
+      double minutes;
+      if (residue > -1 && residue < 16) {
+        minutes = 0.0;
+      } else {
+        if (residue > 15 && residue < 31) {
+          minutes = 0.25;
+        } else {
+          if (residue > 30 && residue < 46) {
+            minutes = 0.5;
+          } else {
+            minutes = 0.75;
+          }
+        }
+      }
+      double workTime = hour + minutes;
+      return workTime;
     }
     return 0;
   }
@@ -156,23 +218,4 @@ class WorkingDay {
     }
     return true;
   }
-}
-
-// double convertString(String input) {
-//   if (input != null) {
-//     String firstHalf = input.substring(0, input.indexOf(':'));
-//     String secHalf = input.substring(input.indexOf(':') + 1);
-
-//     int hour = int.parse(firstHalf);
-//     int min = int.parse(secHalf);
-
-//     double output = hour + min / 60;
-
-//     return output;
-//   }
-//   return 0;
-// }
-
-extension Ex on double {
-  double toPrecision(int n) => double.parse(toStringAsFixed(n));
 }

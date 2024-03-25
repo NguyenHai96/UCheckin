@@ -184,6 +184,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
+  npreferences:
+    dependency: "direct main"
+    description:
+      name: npreferences
+      sha256: "491624ee0d6630461861d2de81a0032cb8871ae3f6bd2e53030816a1f2ee947f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
   path:
     dependency: transitive
     description:

@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_month.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
@@ -21,18 +25,36 @@ class _PageCheckInState extends State<PageCheckIn> {
   late PageController _pageController;
   List<WorkingMonth> dataMonth = [];
   int _currentIndex = 1;
-  bool _isAcceptButton = false;
   DateTime systemTime() => DateTime.now();
-  late SharedPreferences prefs;
 
   getDateTimeWork() async {
     DateTime now = DateTime.now();
 
+    final newWorkingObj =
+        await NPreferences().getDataWorkingDay(ShareKeys.checkTime);
+    var encodedString = jsonEncode(newWorkingObj);
+    Map<String, dynamic>? valueMap = json.decode(encodedString);
+    WorkingDay? dataWorkingday;
+    if (valueMap != null) {
+      dataWorkingday = WorkingDay.fromJson(valueMap);
+    } else {
+      dataWorkingday = null;
+    }
+
     List<WorkingMonth> newList = [];
+
     newList.add(getNowMonth(now));
     newList.add(getNextMonth(now));
     newList.insert(0, getLastMonth(now));
 
+    for (int i = 0; i < newList.length; i++) {
+      for (int j = 0; j < newList[i].dayOfWeek.length; j++) {
+        if (newList[i].dayOfWeek[j].date == dataWorkingday?.date) {
+          newList[i].dayOfWeek[j].checkin = dataWorkingday?.checkin;
+          newList[i].dayOfWeek[j].checkout = dataWorkingday?.checkout;
+        }
+      }
+    }
     setState(() {
       dataMonth.addAll(newList);
     });
@@ -138,11 +160,6 @@ class _PageCheckInState extends State<PageCheckIn> {
     super.initState();
     getDateTimeWork();
     _pageController = PageController(initialPage: _currentIndex);
-    initSavedData();
-  }
-
-  void initSavedData() async {
-    prefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -166,6 +183,7 @@ class _PageCheckInState extends State<PageCheckIn> {
         ),
         leading: InkWell(
           onTap: () {
+            NPreferences().clear();
             Navigator.pop(context);
           },
           child: Image.asset(AppAssets.leftArrow),
@@ -393,20 +411,20 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                                 Radius.circular(
                                                                     4.r))),
                                                     child: InkWell(
-                                                      onTap: () async {
+                                                      onTap: () {
                                                         setState(() {
                                                           shortCut.checkin =
                                                               systemTime();
                                                           shortCut
                                                               .checkinTimeString();
-                                                          _isAcceptButton =
-                                                              true;
                                                         });
-                                                        await prefs.setString(
+
+                                                        final newWokingDayJson =
+                                                            jsonEncode(shortCut
+                                                                .toJson());
+                                                        NPreferences().saveData(
                                                             ShareKeys.checkTime,
-                                                            getTimeString(
-                                                                shortCut
-                                                                    .checkin!));
+                                                            newWokingDayJson);
                                                       },
                                                       child: Text(
                                                         'Check in',
@@ -449,20 +467,33 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                     height: 22.h,
                                                     width: 64.w,
                                                     decoration: BoxDecoration(
-                                                        color: _isAcceptButton
-                                                            ? AppColors.main
-                                                            : Colors.grey,
+                                                        color:
+                                                            shortCut.checkin !=
+                                                                    null
+                                                                ? AppColors.main
+                                                                : Colors.grey,
                                                         borderRadius:
                                                             BorderRadius.all(
                                                                 Radius.circular(
                                                                     4.r))),
                                                     child: InkWell(
-                                                      onTap: _isAcceptButton
-                                                          ? () {
+                                                      onTap: shortCut.checkin !=
+                                                              null
+                                                          ? () async {
                                                               setState(() {
                                                                 shortCut.checkout =
                                                                     systemTime();
                                                               });
+
+                                                              final newWorkingObj =
+                                                                  jsonEncode(
+                                                                      shortCut
+                                                                          .toJson());
+
+                                                              NPreferences().saveData(
+                                                                  ShareKeys
+                                                                      .checkTime,
+                                                                  newWorkingObj);
                                                             }
                                                           : null,
                                                       child: Text(
