@@ -1,5 +1,4 @@
 class User {
-  int? id;
   String? email;
   String? password;
   String? name;
@@ -10,8 +9,7 @@ class User {
   String? avatar;
 
   User(
-      {this.id,
-      this.email,
+      {this.email,
       this.password,
       this.name,
       this.nameEnglish,
@@ -21,7 +19,6 @@ class User {
       this.avatar});
 
   factory User.formJson(Map<String, dynamic> json) => User(
-        id: json["id"],
         email: json["email"],
         password: json["password"],
         name: json["name"],
@@ -33,7 +30,6 @@ class User {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "email": email,
         "password": password,
         "name": name,

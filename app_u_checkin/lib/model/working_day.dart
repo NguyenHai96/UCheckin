@@ -50,15 +50,6 @@ class WorkingDay {
     };
   }
 
-  Map<String, dynamic> encodeMap(Map<String, dynamic> map) {
-    map.forEach((key, value) {
-      if (value is DateTime) {
-        map[key] = value.toString();
-      }
-    });
-    return map;
-  }
-
   DateTime systemTime() => DateTime.now();
 
   DateTime getDataDateTime(String date) {

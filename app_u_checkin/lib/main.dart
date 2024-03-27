@@ -1,6 +1,8 @@
 import 'package:app_u_checkin/page/check_in_page.dart';
 import 'package:app_u_checkin/page/home_page.dart';
 import 'package:app_u_checkin/page/login_page.dart';
+import 'package:app_u_checkin/page/profile_page.dart';
+import 'package:app_u_checkin/page/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: const LoginPage(),
+          home: const ProfilePage(),
         );
       },
     );

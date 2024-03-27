@@ -1,3 +1,4 @@
+import 'package:app_u_checkin/page/sign_up_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
@@ -14,7 +15,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<ScaffoldState> _formKey = GlobalKey<ScaffoldState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
+          SizedBox(
             child: Column(
               children: [
                 Padding(
@@ -64,167 +64,166 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: EdgeInsets.only(top: 64.h),
+          Padding(
+            padding: EdgeInsets.only(top: 64.h),
+            child: SizedBox(
+              width: 272.w,
+              height: 269.h,
               child: SizedBox(
                 width: 272.w,
-                height: 269.h,
-                child: Expanded(
-                  child: Container(
-                    width: 272.w,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 17.h,
-                          width: 272.w,
-                          child: Text(
-                            'Email',
-                            style: TextStyle(
-                                fontFamily: FontFamily.bai_jamjuree,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.sp,
-                                color: AppColors.main),
-                          ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 17.h,
+                      width: 272.w,
+                      child: Text(
+                        'Email',
+                        style: TextStyle(
+                            fontFamily: FontFamily.bai_jamjuree,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp,
+                            color: AppColors.main),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    Container(
+                      height: 48.h,
+                      width: 272.w,
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      decoration: BoxDecoration(
+                          color: AppColors.login,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.r))),
+                      child: TextFormField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter',
+                          suffixStyle: TextStyle(
+                              fontSize: 16.sp,
+                              fontFamily: FontFamily.bai_jamjuree),
+                          fillColor: AppColors.text,
                         ),
-                        SizedBox(
-                          height: 4.h,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16.h),
+                      child: SizedBox(
+                        height: 17.h,
+                        width: 272.w,
+                        child: Text(
+                          'Password',
+                          style: TextStyle(
+                              fontFamily: FontFamily.bai_jamjuree,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp,
+                              color: AppColors.main),
                         ),
-                        Container(
-                          height: 48.h,
-                          width: 272.w,
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          decoration: BoxDecoration(
-                              color: AppColors.login,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.r))),
-                          child: TextFormField(
-                            controller: emailController,
-                            decoration: InputDecoration(
-                              hintText: 'Enter',
-                              suffixStyle: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontFamily: FontFamily.bai_jamjuree),
-                              fillColor: AppColors.text,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
-                              }
-                              return null;
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    Container(
+                      height: 48.h,
+                      width: 272.w,
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      decoration: BoxDecoration(
+                          color: AppColors.login,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.r))),
+                      child: TextFormField(
+                        obscureText: _isHidden,
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                            hintText: 'Enter',
+                            suffixStyle: TextStyle(
+                                fontSize: 16.sp,
+                                fontFamily: FontFamily.bai_jamjuree),
+                            fillColor: AppColors.text,
+                            suffix: InkWell(
+                              onTap: _togglePasswordView,
+                              child: Icon(_isHidden
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                            )),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16.h,
+                    ),
+                    SizedBox(
+                      width: 272.w,
+                      height: 19.h,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => SignUpPage()));
                             },
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16.h),
-                          child: SizedBox(
-                            height: 17.h,
-                            width: 272.w,
                             child: Text(
-                              'Password',
+                              'Sign up',
                               style: TextStyle(
                                   fontFamily: FontFamily.bai_jamjuree,
-                                  fontWeight: FontWeight.bold,
                                   fontSize: 14.sp,
                                   color: AppColors.main),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 4.h,
-                        ),
-                        Container(
-                          height: 48.h,
-                          width: 272.w,
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          decoration: BoxDecoration(
-                              color: AppColors.login,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.r))),
-                          child: TextFormField(
-                            obscureText: _isHidden,
-                            controller: passwordController,
-                            decoration: InputDecoration(
-                                hintText: 'Enter',
-                                suffixStyle: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontFamily: FontFamily.bai_jamjuree),
-                                fillColor: AppColors.text,
-                                suffix: InkWell(
-                                  onTap: _togglePasswordView,
-                                  child: Icon(_isHidden
-                                      ? Icons.visibility
-                                      : Icons.visibility_off),
-                                )),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16.h,
-                        ),
-                        SizedBox(
-                          width: 272.w,
-                          height: 19.h,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                onTap: () {},
-                                child: Text(
-                                  'Sign up',
-                                  style: TextStyle(
-                                      fontFamily: FontFamily.bai_jamjuree,
-                                      fontSize: 14.sp,
-                                      color: AppColors.main),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: Text(
-                                  'Forgot password?',
-                                  style: TextStyle(
-                                      fontFamily: FontFamily.bai_jamjuree,
-                                      fontSize: 14.sp,
-                                      color: AppColors.main),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 32.h,
-                        ),
-                        Container(
-                          height: 48.h,
-                          width: 272.w,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.r)),
-                              color: Colors.grey),
-                          child: InkWell(
+                          InkWell(
                             onTap: () {},
                             child: Text(
-                              'Log in',
+                              'Forgot password?',
                               style: TextStyle(
                                   fontFamily: FontFamily.bai_jamjuree,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 14.sp,
+                                  color: AppColors.main),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 32.h,
+                    ),
+                    Container(
+                      height: 48.h,
+                      width: 272.w,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(8.r)),
+                          color: Colors.grey),
+                      child: InkWell(
+                        onTap: () {},
+                        child: Text(
+                          'Log in',
+                          style: TextStyle(
+                              fontFamily: FontFamily.bai_jamjuree,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),

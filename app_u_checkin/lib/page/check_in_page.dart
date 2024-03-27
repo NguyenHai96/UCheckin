@@ -26,20 +26,20 @@ class _PageCheckInState extends State<PageCheckIn> {
   List<WorkingMonth> dataMonth = [];
   int _currentIndex = 1;
   DateTime systemTime() => DateTime.now();
+  List<String> listWorkingDay = [];
 
   getDateTimeWork() async {
     DateTime now = DateTime.now();
 
-    final newWorkingObj =
-        await NPreferences().getDataWorkingDay(ShareKeys.checkTime);
-    var encodedString = jsonEncode(newWorkingObj);
-    Map<String, dynamic>? valueMap = json.decode(encodedString);
-    WorkingDay? dataWorkingday;
-    if (valueMap != null) {
-      dataWorkingday = WorkingDay.fromJson(valueMap);
-    } else {
-      dataWorkingday = null;
-    }
+    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
+    // var encodedString = jsonEncode(newWorkingObj);
+    // Map<String, dynamic>? valueMap = json.decode(encodedString);
+    // WorkingDay? dataWorkingday;
+    // if (valueMap != null) {
+    //   dataWorkingday = WorkingDay.fromJson(valueMap);
+    // } else {
+    //   dataWorkingday = null;
+    // }
 
     List<WorkingMonth> newList = [];
 
@@ -49,15 +49,18 @@ class _PageCheckInState extends State<PageCheckIn> {
 
     for (int i = 0; i < newList.length; i++) {
       for (int j = 0; j < newList[i].dayOfWeek.length; j++) {
-        if (newList[i].dayOfWeek[j].date == dataWorkingday?.date) {
-          newList[i].dayOfWeek[j].checkin = dataWorkingday?.checkin;
-          newList[i].dayOfWeek[j].checkout = dataWorkingday?.checkout;
+        for (int l = 0; l < newWorkingObj.length; l++) {
+          if (newList[i].dayOfWeek[j].date == newWorkingObj[l].date) {
+            newList[i].dayOfWeek[j].checkin = newWorkingObj[l].checkin;
+            newList[i].dayOfWeek[j].checkout = newWorkingObj[l].checkout;
+          }
         }
       }
     }
     setState(() {
       dataMonth.addAll(newList);
     });
+    await _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
   WorkingMonth getNowMonth(DateTime date) {
@@ -65,8 +68,7 @@ class _PageCheckInState extends State<PageCheckIn> {
     List<WorkingDay> listMonthNow = [];
     DateTime startDateMonth = DateTime(date.year, date.month);
     DateTime endDateMonth = DateTime(date.year, date.month + 1);
-    int daysInMonth =
-        DateTimeRange(start: startDateMonth, end: endDateMonth).duration.inDays;
+    int daysInMonth = DateTimeRange(start: startDateMonth, end: endDateMonth).duration.inDays;
 
     final items = List<DateTime>.generate(daysInMonth, (i) {
       DateTime fristDay = DateTime(date.year, date.month, 1);
@@ -84,8 +86,7 @@ class _PageCheckInState extends State<PageCheckIn> {
     List<WorkingDay> listMonthLast = [];
     DateTime startDateMonth = DateTime(date.year, date.month - 1);
     DateTime endDateMonth = DateTime(date.year, date.month);
-    int daysInMonth =
-        DateTimeRange(start: startDateMonth, end: endDateMonth).duration.inDays;
+    int daysInMonth = DateTimeRange(start: startDateMonth, end: endDateMonth).duration.inDays;
 
     final items = List<DateTime>.generate(daysInMonth, (i) {
       DateTime fristDay = DateTime(date.year, date.month - 1, 1);
@@ -103,8 +104,7 @@ class _PageCheckInState extends State<PageCheckIn> {
     List<WorkingDay> listMonthNext = [];
     DateTime startDateMonth = DateTime(date.year, date.month + 1);
     DateTime endDateMonth = DateTime(date.year, date.month + 2);
-    int daysInMonth =
-        DateTimeRange(start: startDateMonth, end: endDateMonth).duration.inDays;
+    int daysInMonth = DateTimeRange(start: startDateMonth, end: endDateMonth).duration.inDays;
 
     final items = List<DateTime>.generate(daysInMonth, (i) {
       DateTime fristDay = DateTime(date.year, date.month + 1, 1);
@@ -128,8 +128,7 @@ class _PageCheckInState extends State<PageCheckIn> {
         });
       }
     } else {
-      _pageController.animateToPage(_currentIndex,
-          duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+      _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
     }
   }
 
@@ -143,8 +142,7 @@ class _PageCheckInState extends State<PageCheckIn> {
         });
       }
     }
-    _pageController.animateToPage(_currentIndex,
-        duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+    _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
   String getMonthState() {
@@ -176,14 +174,10 @@ class _PageCheckInState extends State<PageCheckIn> {
         backgroundColor: Colors.white,
         title: Text(
           'Check in',
-          style: TextStyle(
-              fontFamily: FontFamily.beVietnamPro,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold),
+          style: TextStyle(fontFamily: FontFamily.beVietnamPro, fontSize: 16.sp, fontWeight: FontWeight.bold),
         ),
         leading: InkWell(
           onTap: () {
-            NPreferences().clear();
             Navigator.pop(context);
           },
           child: Image.asset(AppAssets.leftArrow),
@@ -199,10 +193,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Your puch in table',
-                  style: TextStyle(
-                      fontFamily: FontFamily.bai_jamjuree,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold),
+                  style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(
@@ -221,8 +212,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 12.w),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     width: 24.w,
@@ -238,11 +228,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                                     child: Container(
                                         alignment: Alignment.center,
                                         child: Text(getMonthState(),
-                                            style: TextStyle(
-                                                fontFamily:
-                                                    FontFamily.bai_jamjuree,
-                                                fontSize: 16.sp,
-                                                color: Colors.black))),
+                                            style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, color: Colors.black))),
                                   ),
                                   Container(
                                     width: 24.w,
@@ -272,64 +258,40 @@ class _PageCheckInState extends State<PageCheckIn> {
                         alignment: Alignment.center,
                         width: 83.w,
                         height: 31.h,
-                        decoration: BoxDecoration(
-                            color: AppColors.date,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4.r))),
+                        decoration: BoxDecoration(color: AppColors.date, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                         child: Text(
                           'Date',
-                          style: TextStyle(
-                              fontFamily: FontFamily.bai_jamjuree,
-                              fontSize: 14.sp,
-                              color: Colors.white),
+                          style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.white),
                         ),
                       ),
                       Container(
                         alignment: Alignment.center,
                         width: 83.w,
                         height: 31.h,
-                        decoration: BoxDecoration(
-                            color: AppColors.checkin,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4.r))),
+                        decoration: BoxDecoration(color: AppColors.checkin, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                         child: Text(
                           'Check in',
-                          style: TextStyle(
-                              fontFamily: FontFamily.bai_jamjuree,
-                              fontSize: 14.sp,
-                              color: Colors.white),
+                          style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.white),
                         ),
                       ),
                       Container(
                         alignment: Alignment.center,
                         width: 83.w,
                         height: 31.h,
-                        decoration: BoxDecoration(
-                            color: AppColors.checkout,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4.r))),
+                        decoration: BoxDecoration(color: AppColors.checkout, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                         child: Text(
                           'Check out',
-                          style: TextStyle(
-                              fontFamily: FontFamily.bai_jamjuree,
-                              fontSize: 14.sp,
-                              color: Colors.white),
+                          style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.white),
                         ),
                       ),
                       Container(
                         alignment: Alignment.center,
                         width: 83.w,
                         height: 31.h,
-                        decoration: BoxDecoration(
-                            color: AppColors.worktime,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4.r))),
+                        decoration: BoxDecoration(color: AppColors.worktime, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                         child: Text(
                           'Work time',
-                          style: TextStyle(
-                              fontFamily: FontFamily.bai_jamjuree,
-                              fontSize: 14.sp,
-                              color: Colors.white),
+                          style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.white),
                         ),
                       ),
                     ],
@@ -360,22 +322,15 @@ class _PageCheckInState extends State<PageCheckIn> {
                                       width: 358.w,
                                       height: 34.h,
                                       decoration: BoxDecoration(
-                                          color: !shortCut.isWeekend()
-                                              ? Colors.white
-                                              : AppColors.visible,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8))),
+                                          color: !shortCut.isWeekend() ? Colors.white : AppColors.visible,
+                                          borderRadius: BorderRadius.all(Radius.circular(8))),
                                       child: Row(
                                         children: [
                                           Expanded(
                                             child: Center(
                                                 child: Text(
                                               shortCut.getDateString(),
-                                              style: TextStyle(
-                                                  fontFamily:
-                                                      FontFamily.bai_jamjuree,
-                                                  fontSize: 14.sp,
-                                                  color: AppColors.text),
+                                              style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
                                             )),
                                           ),
                                           Expanded(
@@ -383,20 +338,13 @@ class _PageCheckInState extends State<PageCheckIn> {
                                               height: 34.h,
                                               width: 83.w,
                                               child: Visibility(
-                                                visible:
-                                                    shortCut.checkinAvailable(),
+                                                visible: shortCut.checkinAvailable(),
                                                 replacement: Center(
-                                                  child: Text(
-                                                      shortCut
-                                                          .checkinTimeString(),
+                                                  child: Text(shortCut.checkinTimeString(),
                                                       style: TextStyle(
-                                                          fontFamily: FontFamily
-                                                              .bai_jamjuree,
+                                                          fontFamily: FontFamily.bai_jamjuree,
                                                           fontSize: 14.sp,
-                                                          color: shortCut
-                                                                  .checkWrongTimeCheckIn()
-                                                              ? AppColors.text
-                                                              : Colors.red)),
+                                                          color: shortCut.checkWrongTimeCheckIn() ? AppColors.text : Colors.red)),
                                                 ),
                                                 child: Center(
                                                   child: Container(
@@ -404,36 +352,25 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                     height: 22.h,
                                                     width: 56.w,
                                                     decoration: BoxDecoration(
-                                                        color:
-                                                            AppColors.checkout,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    4.r))),
+                                                        color: AppColors.checkout, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                                                     child: InkWell(
-                                                      onTap: () {
+                                                      onTap: () async {
                                                         setState(() {
-                                                          shortCut.checkin =
-                                                              systemTime();
-                                                          shortCut
-                                                              .checkinTimeString();
+                                                          shortCut.checkin = systemTime();
                                                         });
+                                                        listWorkingDay = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
 
-                                                        final newWokingDayJson =
-                                                            jsonEncode(shortCut
-                                                                .toJson());
-                                                        NPreferences().saveData(
-                                                            ShareKeys.checkTime,
-                                                            newWokingDayJson);
+                                                        final newWokingDayJson = jsonEncode(shortCut.toJson());
+
+                                                        if (listWorkingDay.contains(newWokingDayJson)) {
+                                                          listWorkingDay.add(newWokingDayJson);
+                                                        }
+
+                                                        await NPreferences().saveData(ShareKeys.timeWorking, listWorkingDay);
                                                       },
                                                       child: Text(
                                                         'Check in',
-                                                        style: TextStyle(
-                                                            fontFamily: FontFamily
-                                                                .bai_jamjuree,
-                                                            fontSize: 12.sp,
-                                                            color:
-                                                                Colors.white),
+                                                        style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 12.sp, color: Colors.white),
                                                       ),
                                                     ),
                                                   ),
@@ -446,20 +383,13 @@ class _PageCheckInState extends State<PageCheckIn> {
                                               height: 34.h,
                                               width: 83.w,
                                               child: Visibility(
-                                                visible: shortCut
-                                                    .checkoutAvailable(),
+                                                visible: shortCut.checkoutAvailable(),
                                                 replacement: Center(
-                                                  child: Text(
-                                                      shortCut
-                                                          .checkoutTimeString(),
+                                                  child: Text(shortCut.checkoutTimeString(),
                                                       style: TextStyle(
-                                                          fontFamily: FontFamily
-                                                              .bai_jamjuree,
+                                                          fontFamily: FontFamily.bai_jamjuree,
                                                           fontSize: 14.sp,
-                                                          color: shortCut
-                                                                  .checkWrongTimeCheckOut()
-                                                              ? AppColors.text
-                                                              : Colors.red)),
+                                                          color: shortCut.checkWrongTimeCheckOut() ? AppColors.text : Colors.red)),
                                                 ),
                                                 child: Center(
                                                   child: Container(
@@ -467,43 +397,27 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                     height: 22.h,
                                                     width: 64.w,
                                                     decoration: BoxDecoration(
-                                                        color:
-                                                            shortCut.checkin !=
-                                                                    null
-                                                                ? AppColors.main
-                                                                : Colors.grey,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    4.r))),
+                                                        color: shortCut.checkin != null ? AppColors.main : Colors.grey,
+                                                        borderRadius: BorderRadius.all(Radius.circular(4.r))),
                                                     child: InkWell(
-                                                      onTap: shortCut.checkin !=
-                                                              null
+                                                      onTap: shortCut.checkin != null
                                                           ? () async {
+                                                              listWorkingDay = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
                                                               setState(() {
-                                                                shortCut.checkout =
-                                                                    systemTime();
+                                                                shortCut.checkout = systemTime();
                                                               });
 
-                                                              final newWorkingObj =
-                                                                  jsonEncode(
-                                                                      shortCut
-                                                                          .toJson());
+                                                              final newWorkingObj = jsonEncode(shortCut.toJson());
+                                                              if (listWorkingDay.contains(newWorkingObj)) {
+                                                                listWorkingDay.add(newWorkingObj);
+                                                              }
 
-                                                              NPreferences().saveData(
-                                                                  ShareKeys
-                                                                      .checkTime,
-                                                                  newWorkingObj);
+                                                              NPreferences().saveData(ShareKeys.timeWorking, listWorkingDay);
                                                             }
                                                           : null,
                                                       child: Text(
                                                         'Check out',
-                                                        style: TextStyle(
-                                                            fontFamily: FontFamily
-                                                                .bai_jamjuree,
-                                                            fontSize: 12.sp,
-                                                            color:
-                                                                Colors.white),
+                                                        style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 12.sp, color: Colors.white),
                                                       ),
                                                     ),
                                                   ),
@@ -518,13 +432,9 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                   child: Text(
                                                 '${shortCut.resultWorkTime()} h',
                                                 style: TextStyle(
-                                                    fontFamily:
-                                                        FontFamily.bai_jamjuree,
+                                                    fontFamily: FontFamily.bai_jamjuree,
                                                     fontSize: 14.sp,
-                                                    color: shortCut
-                                                            .checkWrongTimeWorkTime()
-                                                        ? AppColors.text
-                                                        : Colors.red),
+                                                    color: shortCut.checkWrongTimeWorkTime() ? AppColors.text : Colors.red),
                                               )),
                                             ),
                                           ),

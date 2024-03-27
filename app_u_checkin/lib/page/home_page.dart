@@ -1,9 +1,11 @@
+import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/working_week.dart';
 import 'package:app_u_checkin/page/check_in_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
+import 'package:app_u_checkin/values/share_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,12 +24,31 @@ class _HomePageState extends State<HomePage> {
 
   getDateTimeWork() async {
     DateTime now = DateTime.now();
+
+    List<WorkingDay> newWorkingObj =
+        await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
+    for (int i = 0; i < newWorkingObj.length; i++) {}
     var startDate = now.subtract(Duration(days: now.weekday - 1));
     var endDate = now.add(Duration(days: 7 - now.weekday));
     List<WorkingWeek> newList = [];
     newList.add(getNowWeek(now));
     newList.add(getNextWeek(endDate));
     newList.insert(0, getLastWeek(startDate));
+
+    for (int i = 0; i < newList.length; i++) {
+      for (int j = 0; j < newList[i].dayOfWeek.length; j++) {
+        for (int l = 0; l < newWorkingObj.length; l++) {
+          if (DateUtils.isSameDay(
+              newList[i].dayOfWeek[j].date, newWorkingObj[l].date)) {
+            newList[i].dayOfWeek[j].checkin = newWorkingObj[l].checkin;
+            newList[i].dayOfWeek[j].checkout = newWorkingObj[l].checkout;
+            print(newList[i].dayOfWeek[j].checkin);
+            print(newList[i].dayOfWeek[j].checkout);
+          }
+        }
+      }
+    }
+
     setState(() {
       dataWeek.addAll(newList);
     });
@@ -42,8 +63,7 @@ class _HomePageState extends State<HomePage> {
       return list.add(Duration(days: i));
     });
     for (int i = 0; i < items.length; i++) {
-      listWeekNow.add(WorkingDay(
-          date: items[i], checkin: systemTime(), checkout: systemTime()));
+      listWeekNow.add(WorkingDay(date: items[i]));
     }
     week.dayOfWeek.addAll(listWeekNow);
     return week;
@@ -55,7 +75,8 @@ class _HomePageState extends State<HomePage> {
     for (int i = 7; i > 0; i--) {
       var beforeDay = date.subtract(Duration(days: i));
       listWeekLast.add(WorkingDay(
-          date: beforeDay, checkin: systemTime(), checkout: systemTime()));
+        date: beforeDay,
+      ));
     }
     week.dayOfWeek.addAll(listWeekLast);
     return week;
@@ -66,8 +87,7 @@ class _HomePageState extends State<HomePage> {
     List<WorkingDay> listWeekNext = [];
     for (int i = 1; i <= 7; i++) {
       var behindDay = date.add(Duration(days: i));
-      listWeekNext.add(WorkingDay(
-          date: behindDay, checkin: systemTime(), checkout: systemTime()));
+      listWeekNext.add(WorkingDay(date: behindDay));
     }
     week.dayOfWeek.addAll(listWeekNext);
     return week;
@@ -509,22 +529,14 @@ class _HomePageState extends State<HomePage> {
                                             height: 8.h,
                                           ),
                                       itemBuilder: (context, index) {
-                                        // double work = convertString(dataWeek[i]
-                                        //         .dayOfWeek[index]
-                                        //         .checkout) -
-                                        //     convertString(dataWeek[i]
-                                        //         .dayOfWeek[index]
-                                        //         .checkin) -
-                                        //     1;
-                                        // dataWeek[i].dayOfWeek[index].workTime =
-                                        //     work.toPrecision(2);
+                                        var shortCut =
+                                            dataWeek[i].dayOfWeek[index];
+
                                         return Container(
                                             width: 358.w,
                                             height: 31.h,
                                             decoration: BoxDecoration(
-                                                color: dataWeek[i]
-                                                        .dayOfWeek[index]
-                                                        .isWeekend()
+                                                color: !shortCut.isWeekend()
                                                     ? Colors.white
                                                     : AppColors.visible,
                                                 borderRadius: BorderRadius.all(
@@ -534,9 +546,7 @@ class _HomePageState extends State<HomePage> {
                                                 Expanded(
                                                   child: Center(
                                                       child: Text(
-                                                    dataWeek[i]
-                                                        .dayOfWeek[index]
-                                                        .getDateString(),
+                                                    shortCut.getDateString(),
                                                     style: TextStyle(
                                                         fontFamily: FontFamily
                                                             .bai_jamjuree,
@@ -545,47 +555,74 @@ class _HomePageState extends State<HomePage> {
                                                   )),
                                                 ),
                                                 Expanded(
-                                                  child: Visibility(
-                                                    visible: dataWeek[i]
-                                                        .dayOfWeek[index]
-                                                        .isWeekend(),
-                                                    child: Center(
+                                                  child: SizedBox(
+                                                    height: 34.h,
+                                                    width: 83.w,
+                                                    child: Visibility(
+                                                      visible:
+                                                          shortCut.checkin !=
+                                                              null,
+                                                      child: Center(
                                                         child: Text(
-                                                      '${dataWeek[i].dayOfWeek[index].checkin}',
-                                                      style: TextStyle(
-                                                          fontFamily: FontFamily
-                                                              .bai_jamjuree,
-                                                          fontSize: 14.sp,
-                                                          color:
-                                                              AppColors.text),
-                                                    )),
+                                                            shortCut
+                                                                .checkinTimeString(),
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    FontFamily
+                                                                        .bai_jamjuree,
+                                                                fontSize: 14.sp,
+                                                                color: shortCut
+                                                                        .checkWrongTimeCheckIn()
+                                                                    ? AppColors
+                                                                        .text
+                                                                    : Colors
+                                                                        .red)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 34.h,
+                                                    width: 83.w,
+                                                    child: Visibility(
+                                                      visible:
+                                                          shortCut.checkout !=
+                                                              null,
+                                                      child: Center(
+                                                        child: Text(
+                                                            shortCut
+                                                                .checkoutTimeString(),
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    FontFamily
+                                                                        .bai_jamjuree,
+                                                                fontSize: 14.sp,
+                                                                color: shortCut
+                                                                        .checkWrongTimeCheckOut()
+                                                                    ? AppColors
+                                                                        .text
+                                                                    : Colors
+                                                                        .red)),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: Visibility(
-                                                    visible: dataWeek[i]
-                                                        .dayOfWeek[index]
-                                                        .isWeekend(),
+                                                    visible:
+                                                        shortCut.showWorkTime(),
                                                     child: Center(
                                                         child: Text(
-                                                      '${dataWeek[i].dayOfWeek[index].checkout}',
+                                                      '${shortCut.resultWorkTime()} h',
                                                       style: TextStyle(
                                                           fontFamily: FontFamily
                                                               .bai_jamjuree,
                                                           fontSize: 14.sp,
-                                                          color:
-                                                              AppColors.text),
-                                                    )),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Visibility(
-                                                    visible: dataWeek[i]
-                                                        .dayOfWeek[index]
-                                                        .isWeekend(),
-                                                    child: Center(
-                                                        child: Text(
-                                                      '${dataWeek[i].dayOfWeek[index]}',
+                                                          color: shortCut
+                                                                  .checkWrongTimeWorkTime()
+                                                              ? AppColors.text
+                                                              : Colors.red),
                                                     )),
                                                   ),
                                                 ),
@@ -607,19 +644,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-double convertString(String? input) {
-  String firstHalf = input!.substring(0, input.indexOf(':'));
-  String secHalf = input.substring(input.indexOf(':') + 1);
-
-  int hour = int.parse(firstHalf);
-  int min = int.parse(secHalf);
-
-  double output = hour + min / 60;
-
-  return output;
-}
-
-// extension Ex on double {
-//   double toPrecision(int n) => double.parse(toStringAsFixed(n));
-// }

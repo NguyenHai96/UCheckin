@@ -2,6 +2,7 @@ library npreferences;
 
 import 'dart:convert';
 
+import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,11 +56,23 @@ class NPreferences {
 
   Future<T> getListDataWorkingDay<T>(String key) async {
     final SharedPreferences ref = await preferences;
-    final newListJson = ref.getStringList(key);
-
+    List<String> newListJson = ref.getStringList(key) ?? [];
+    List<WorkingDay> items = [];
     if (newListJson != null) {
-      final newListJson = WorkingDay.fromJson(jsonDecode(newListJson));
-      return newListJson as T;
+      for (dynamic item in newListJson) {
+        items.add(WorkingDay.fromJson(jsonDecode(item)));
+      }
+      return items as T;
+    }
+    return null as T;
+  }
+
+  Future<T> getUser<T>(String key) async {
+    final SharedPreferences ref = await preferences;
+    final userJson = ref.getString(key);
+    if (userJson != null) {
+      final userObj = User.formJson(jsonDecode(userJson));
+      return userObj as T;
     }
     return null as T;
   }
