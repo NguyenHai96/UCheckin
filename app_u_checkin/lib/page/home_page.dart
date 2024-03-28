@@ -1,4 +1,5 @@
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
+import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_week.dart';
 import 'package:app_u_checkin/page/check_in_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
@@ -10,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  User newUser;
+  HomePage({required this.newUser});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,8 +27,8 @@ class _HomePageState extends State<HomePage> {
   getDateTimeWork() async {
     DateTime now = DateTime.now();
 
-    List<WorkingDay> newWorkingObj =
-        await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
+    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
+    print(newWorkingObj.toString());
     for (int i = 0; i < newWorkingObj.length; i++) {}
     var startDate = now.subtract(Duration(days: now.weekday - 1));
     var endDate = now.add(Duration(days: 7 - now.weekday));
@@ -38,8 +40,7 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < newList.length; i++) {
       for (int j = 0; j < newList[i].dayOfWeek.length; j++) {
         for (int l = 0; l < newWorkingObj.length; l++) {
-          if (DateUtils.isSameDay(
-              newList[i].dayOfWeek[j].date, newWorkingObj[l].date)) {
+          if (DateUtils.isSameDay(newList[i].dayOfWeek[j].date, newWorkingObj[l].date)) {
             newList[i].dayOfWeek[j].checkin = newWorkingObj[l].checkin;
             newList[i].dayOfWeek[j].checkout = newWorkingObj[l].checkout;
             print(newList[i].dayOfWeek[j].checkin);
@@ -52,6 +53,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       dataWeek.addAll(newList);
     });
+    await _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
   WorkingWeek getNowWeek(DateTime date) {
@@ -104,8 +106,7 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } else {
-      _pageController.animateToPage(_currentIndex,
-          duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+      _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
     }
   }
 
@@ -119,8 +120,7 @@ class _HomePageState extends State<HomePage> {
         });
       }
     }
-    _pageController.animateToPage(_currentIndex,
-        duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+    _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
   String getWeekState() {
@@ -159,10 +159,13 @@ class _HomePageState extends State<HomePage> {
               color: AppColors.main,
               child: Row(
                 children: [
-                  Container(
-                    width: 71.w,
-                    height: 71.h,
-                    child: Image.asset(AppAssets.avatar),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      width: 71.w,
+                      height: 71.h,
+                      child: Image.asset(AppAssets.avatar),
+                    ),
                   ),
                   SizedBox(
                     width: 35.w,
@@ -174,15 +177,11 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Nguyen Thi Mai A',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: FontFamily.bai_jamjuree,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold),
+                            widget.newUser.name.toString(),
+                            style: TextStyle(color: Colors.white, fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Position: BE Developer',
+                            'Position: ${widget.newUser.position}',
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: FontFamily.bai_jamjuree,
@@ -209,15 +208,10 @@ class _HomePageState extends State<HomePage> {
                     alignment: Alignment.center,
                     width: 247.w,
                     height: 51.h,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(12.r))),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(12.r))),
                     child: Text(
                       'Hi, have a effective work day!!!',
-                      style: TextStyle(
-                          fontFamily: FontFamily.bellefair,
-                          fontSize: 19.sp,
-                          color: Colors.black),
+                      style: TextStyle(fontFamily: FontFamily.bellefair, fontSize: 19.sp, color: Colors.black),
                     ),
                   ),
                   Row(
@@ -228,20 +222,11 @@ class _HomePageState extends State<HomePage> {
                         width: 109.w,
                         decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12.r)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black26,
-                                  offset: Offset(1, 3),
-                                  blurRadius: 2.6)
-                            ]),
+                            borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                            boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => PageCheckIn()));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => PageCheckIn()));
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -273,14 +258,8 @@ class _HomePageState extends State<HomePage> {
                         width: 109.w,
                         decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12.r)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black26,
-                                  offset: Offset(1, 3),
-                                  blurRadius: 2.6)
-                            ]),
+                            borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                            boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -310,14 +289,8 @@ class _HomePageState extends State<HomePage> {
                         width: 109.w,
                         decoration: BoxDecoration(
                             color: Colors.grey[300],
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12.r)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black26,
-                                  offset: Offset(1, 3),
-                                  blurRadius: 2.6)
-                            ]),
+                            borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                            boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -361,10 +334,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text(
                         'Your punch in table',
-                        style: TextStyle(
-                            fontFamily: FontFamily.bai_jamjuree,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, fontWeight: FontWeight.bold),
                       )
                     ],
                   )),
@@ -387,11 +357,9 @@ class _HomePageState extends State<HomePage> {
                                       width: 358.w,
                                       height: 32.h,
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 12.w),
+                                        padding: EdgeInsets.symmetric(horizontal: 12.w),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               width: 24.w,
@@ -400,8 +368,7 @@ class _HomePageState extends State<HomePage> {
                                                 onTap: () {
                                                   handlePreviousButtonTapped();
                                                 },
-                                                child: Image.asset(
-                                                    AppAssets.leftArrow),
+                                                child: Image.asset(AppAssets.leftArrow),
                                               ),
                                             ),
                                             Expanded(
@@ -410,11 +377,7 @@ class _HomePageState extends State<HomePage> {
                                                   child: SizedBox(
                                                     child: Text(
                                                       getWeekState(),
-                                                      style: TextStyle(
-                                                          fontFamily: FontFamily
-                                                              .bai_jamjuree,
-                                                          fontSize: 16.sp,
-                                                          color: Colors.black),
+                                                      style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, color: Colors.black),
                                                     ),
                                                   )),
                                             ),
@@ -425,8 +388,7 @@ class _HomePageState extends State<HomePage> {
                                                 onTap: () {
                                                   handleNextButtonTapped();
                                                 },
-                                                child: Image.asset(
-                                                    AppAssets.rightArrow),
+                                                child: Image.asset(AppAssets.rightArrow),
                                               ),
                                             ),
                                           ],
@@ -437,71 +399,46 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     alignment: Alignment.center,
                                     width: 83.w,
                                     height: 31.h,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.date,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4.r))),
+                                    decoration: BoxDecoration(color: AppColors.date, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                                     child: Text(
                                       'Date',
-                                      style: TextStyle(
-                                          fontFamily: FontFamily.bai_jamjuree,
-                                          fontSize: 14.sp,
-                                          color: Colors.white),
+                                      style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.white),
                                     ),
                                   ),
                                   Container(
                                     alignment: Alignment.center,
                                     width: 83.w,
                                     height: 31.h,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.checkin,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4.r))),
+                                    decoration: BoxDecoration(color: AppColors.checkin, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                                     child: Text(
                                       'Check in',
-                                      style: TextStyle(
-                                          fontFamily: FontFamily.bai_jamjuree,
-                                          fontSize: 14.sp,
-                                          color: Colors.white),
+                                      style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.white),
                                     ),
                                   ),
                                   Container(
                                     alignment: Alignment.center,
                                     width: 83.w,
                                     height: 31.h,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.checkout,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4.r))),
+                                    decoration: BoxDecoration(color: AppColors.checkout, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                                     child: Text(
                                       'Check out',
-                                      style: TextStyle(
-                                          fontFamily: FontFamily.bai_jamjuree,
-                                          fontSize: 14.sp,
-                                          color: Colors.white),
+                                      style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.white),
                                     ),
                                   ),
                                   Container(
                                     alignment: Alignment.center,
                                     width: 83.w,
                                     height: 31.h,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.worktime,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4.r))),
+                                    decoration: BoxDecoration(color: AppColors.worktime, borderRadius: BorderRadius.all(Radius.circular(4.r))),
                                     child: Text(
                                       'Work time',
-                                      style: TextStyle(
-                                          fontFamily: FontFamily.bai_jamjuree,
-                                          fontSize: 14.sp,
-                                          color: Colors.white),
+                                      style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.white),
                                     ),
                                   ),
                                 ],
@@ -524,34 +461,25 @@ class _HomePageState extends State<HomePage> {
                                   child: ListView.separated(
                                       padding: EdgeInsets.only(top: 0.h),
                                       itemCount: dataWeek[i].dayOfWeek.length,
-                                      separatorBuilder: (context, index) =>
-                                          SizedBox(
+                                      separatorBuilder: (context, index) => SizedBox(
                                             height: 8.h,
                                           ),
                                       itemBuilder: (context, index) {
-                                        var shortCut =
-                                            dataWeek[i].dayOfWeek[index];
+                                        var shortCut = dataWeek[i].dayOfWeek[index];
 
                                         return Container(
                                             width: 358.w,
                                             height: 31.h,
                                             decoration: BoxDecoration(
-                                                color: !shortCut.isWeekend()
-                                                    ? Colors.white
-                                                    : AppColors.visible,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(8))),
+                                                color: !shortCut.isWeekend() ? Colors.white : AppColors.visible,
+                                                borderRadius: BorderRadius.all(Radius.circular(8))),
                                             child: Row(
                                               children: [
                                                 Expanded(
                                                   child: Center(
                                                       child: Text(
                                                     shortCut.getDateString(),
-                                                    style: TextStyle(
-                                                        fontFamily: FontFamily
-                                                            .bai_jamjuree,
-                                                        fontSize: 14.sp,
-                                                        color: AppColors.text),
+                                                    style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
                                                   )),
                                                 ),
                                                 Expanded(
@@ -559,24 +487,13 @@ class _HomePageState extends State<HomePage> {
                                                     height: 34.h,
                                                     width: 83.w,
                                                     child: Visibility(
-                                                      visible:
-                                                          shortCut.checkin !=
-                                                              null,
+                                                      visible: shortCut.checkin != null,
                                                       child: Center(
-                                                        child: Text(
-                                                            shortCut
-                                                                .checkinTimeString(),
+                                                        child: Text(shortCut.checkinTimeString(),
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    FontFamily
-                                                                        .bai_jamjuree,
+                                                                fontFamily: FontFamily.bai_jamjuree,
                                                                 fontSize: 14.sp,
-                                                                color: shortCut
-                                                                        .checkWrongTimeCheckIn()
-                                                                    ? AppColors
-                                                                        .text
-                                                                    : Colors
-                                                                        .red)),
+                                                                color: shortCut.checkWrongTimeCheckIn() ? AppColors.text : Colors.red)),
                                                       ),
                                                     ),
                                                   ),
@@ -586,43 +503,27 @@ class _HomePageState extends State<HomePage> {
                                                     height: 34.h,
                                                     width: 83.w,
                                                     child: Visibility(
-                                                      visible:
-                                                          shortCut.checkout !=
-                                                              null,
+                                                      visible: shortCut.checkout != null,
                                                       child: Center(
-                                                        child: Text(
-                                                            shortCut
-                                                                .checkoutTimeString(),
+                                                        child: Text(shortCut.checkoutTimeString(),
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    FontFamily
-                                                                        .bai_jamjuree,
+                                                                fontFamily: FontFamily.bai_jamjuree,
                                                                 fontSize: 14.sp,
-                                                                color: shortCut
-                                                                        .checkWrongTimeCheckOut()
-                                                                    ? AppColors
-                                                                        .text
-                                                                    : Colors
-                                                                        .red)),
+                                                                color: shortCut.checkWrongTimeCheckOut() ? AppColors.text : Colors.red)),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                                 Expanded(
                                                   child: Visibility(
-                                                    visible:
-                                                        shortCut.showWorkTime(),
+                                                    visible: shortCut.showWorkTime(),
                                                     child: Center(
                                                         child: Text(
                                                       '${shortCut.resultWorkTime()} h',
                                                       style: TextStyle(
-                                                          fontFamily: FontFamily
-                                                              .bai_jamjuree,
+                                                          fontFamily: FontFamily.bai_jamjuree,
                                                           fontSize: 14.sp,
-                                                          color: shortCut
-                                                                  .checkWrongTimeWorkTime()
-                                                              ? AppColors.text
-                                                              : Colors.red),
+                                                          color: shortCut.checkWrongTimeWorkTime() ? AppColors.text : Colors.red),
                                                     )),
                                                   ),
                                                 ),

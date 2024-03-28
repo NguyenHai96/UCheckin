@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_month.dart';
+import 'package:app_u_checkin/page/home_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
@@ -26,7 +27,7 @@ class _PageCheckInState extends State<PageCheckIn> {
   List<WorkingMonth> dataMonth = [];
   int _currentIndex = 1;
   DateTime systemTime() => DateTime.now();
-  List<String> listWorkingDay = [];
+  List<WorkingDay> listWorkingDay = [];
 
   getDateTimeWork() async {
     DateTime now = DateTime.now();
@@ -359,14 +360,15 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                           shortCut.checkin = systemTime();
                                                         });
                                                         listWorkingDay = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
+                                                        listWorkingDay.add(shortCut);
+                                                        List<String> newWokingDayJson = listWorkingDay.map((e) => jsonEncode(e.toJson())).toList();
+                                                        // final newWokingDayJson = jsonEncode(shortCut.toJson());
 
-                                                        final newWokingDayJson = jsonEncode(shortCut.toJson());
+                                                        // if (listWorkingDay.contains(newWokingDayJson)) {
+                                                        //   listWorkingDay.add(newWokingDayJson);
+                                                        // }
 
-                                                        if (listWorkingDay.contains(newWokingDayJson)) {
-                                                          listWorkingDay.add(newWokingDayJson);
-                                                        }
-
-                                                        await NPreferences().saveData(ShareKeys.timeWorking, listWorkingDay);
+                                                        await NPreferences().saveData(ShareKeys.timeWorking, newWokingDayJson);
                                                       },
                                                       child: Text(
                                                         'Check in',
@@ -406,13 +408,15 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                               setState(() {
                                                                 shortCut.checkout = systemTime();
                                                               });
+                                                              listWorkingDay.add(shortCut);
+                                                              List<String> newWokingDayJson =
+                                                                  listWorkingDay.map((e) => jsonEncode(e.toJson())).toList();
+                                                              // final newWorkingObj = jsonEncode(shortCut.toJson());
+                                                              // if (listWorkingDay.contains(newWorkingObj)) {
+                                                              //   listWorkingDay.add(newWorkingObj);
+                                                              // }
 
-                                                              final newWorkingObj = jsonEncode(shortCut.toJson());
-                                                              if (listWorkingDay.contains(newWorkingObj)) {
-                                                                listWorkingDay.add(newWorkingObj);
-                                                              }
-
-                                                              NPreferences().saveData(ShareKeys.timeWorking, listWorkingDay);
+                                                              NPreferences().saveData(ShareKeys.timeWorking, newWokingDayJson);
                                                             }
                                                           : null,
                                                       child: Text(

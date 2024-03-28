@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
+import 'package:app_u_checkin/model/user.dart';
+import 'package:app_u_checkin/page/input_profile.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
+import 'package:app_u_checkin/values/share_keys.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -264,7 +269,26 @@ class _SignUpPageState extends State<SignUpPage> {
                   InkWell(
                     onTap: _isActiveSignUp
                         ? () async {
-                            print("dasdadasd");
+                            List<String> listKey = (await NPreferences().getDataString(ShareKeys.listKey)) as List<String>;
+                            if (rePasswordController.text == passwordController.text) {
+                              User user = User();
+                              setState(() {
+                                user.email = emailController.text;
+                                user.password = passwordController.text;
+                              });
+                              final newUserJson = jsonEncode(user.toJson());
+                              await NPreferences().saveData(user.email.toString(), newUserJson);
+                              listKey.add(user.email.toString());
+                              await NPreferences().saveData(ShareKeys.listKey, listKey);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => ProfilePage(
+                                            newUser: user,
+                                          )));
+                            } else {
+                              print('Nhap lai mat khau khong dung');
+                            }
                           }
                         : null,
                     child: Container(

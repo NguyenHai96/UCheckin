@@ -43,6 +43,15 @@ class NPreferences {
     return ref.get(key) as T;
   }
 
+  Future<List<String>> getDataString<T>(String key) async {
+    // Get SharedPreferences ref
+    final SharedPreferences ref = await preferences;
+    List<String> items = ref.getStringList(key) ?? [];
+
+    // Get data by key with cast to output data type
+    return items as List<String>;
+  }
+
   Future<T> getDataWorkingDay<T>(String key) async {
     final SharedPreferences ref = await preferences;
     final newWorkingJson = ref.getString(key);
