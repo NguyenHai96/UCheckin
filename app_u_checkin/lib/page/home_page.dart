@@ -2,6 +2,8 @@ import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_week.dart';
 import 'package:app_u_checkin/page/check_in_page.dart';
+import 'package:app_u_checkin/page/make_day_off.dart';
+import 'package:app_u_checkin/page/profile_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
@@ -160,7 +162,14 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => YourProFilePage(
+                                    user: widget.newUser,
+                                  )));
+                    },
                     child: Container(
                       width: 71.w,
                       height: 71.h,
@@ -253,35 +262,40 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      Container(
-                        height: 91.h,
-                        width: 109.w,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(12.r)),
-                            boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 32.w,
-                                height: 32.h,
-                                child: Image.asset(
-                                  AppAssets.makeDayOff,
-                                  fit: BoxFit.cover,
-                                )),
-                            Padding(
-                              padding: EdgeInsets.only(top: 8.h),
-                              child: Text(
-                                'Make day-off',
-                                style: TextStyle(
-                                  color: AppColors.text,
-                                  fontFamily: FontFamily.bai_jamjuree,
-                                  fontSize: 14.sp,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => MakeDayOff()));
+                        },
+                        child: Container(
+                          height: 91.h,
+                          width: 109.w,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                              boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  width: 32.w,
+                                  height: 32.h,
+                                  child: Image.asset(
+                                    AppAssets.makeDayOff,
+                                    fit: BoxFit.cover,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8.h),
+                                child: Text(
+                                  'Make day-off',
+                                  style: TextStyle(
+                                    color: AppColors.text,
+                                    fontFamily: FontFamily.bai_jamjuree,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       Container(

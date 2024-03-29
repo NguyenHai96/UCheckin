@@ -13,4 +13,7 @@ class AppAssets {
   static final String overtime = imagePath + 'ot.png';
   static final String ucheckin = imagePath + 'u_checkin.png';
   static final String slack = imagePath + 'slack.png';
+  static final String home = imagePath + 'icon_home.png';
+  static final String time = imagePath + 'icon_time.png';
+  static final String work = imagePath + 'icon_work.png';
 }
