@@ -6,8 +6,9 @@ class MakeDayOff {
   DateTime? offFrom;
   DateTime? offTo;
   String? description;
+  int? annualLeave;
 
-  MakeDayOff({this.type, this.offFrom, this.offTo, this.description});
+  MakeDayOff({this.type, this.offFrom, this.offTo, this.description, this.annualLeave});
 
   factory MakeDayOff.fromJson(Map<String, dynamic> json) {
     String offFromString;
@@ -26,10 +27,15 @@ class MakeDayOff {
     DateTime checkOffFrom = DateFormat("yyyy-MM-dd hh:mm").parse(offFromString);
     DateTime checkOffTo = DateFormat("yyyy-MM-dd hh:mm").parse(offToString);
 
-    return MakeDayOff(type: json['type'], offFrom: checkOffFrom, offTo: checkOffTo, description: json['description']);
+    return MakeDayOff(
+        type: json['type'] as String,
+        offFrom: checkOffFrom,
+        offTo: checkOffTo,
+        description: json['description'] as String,
+        annualLeave: json['annualLeave'] as int);
   }
 
   Map<String, dynamic> toJson() {
-    return {'type': type, 'offFrom': offFrom.toString(), 'offTo': offTo.toString(), 'description': description};
+    return {'type': type, 'offFrom': offFrom.toString(), 'offTo': offTo.toString(), 'description': description, 'annualLeave': annualLeave};
   }
 }
