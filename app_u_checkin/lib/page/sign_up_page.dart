@@ -273,8 +273,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             if (rePasswordController.text == passwordController.text) {
                               User user = User();
                               setState(() {
+                                user.id = DateTime.now().microsecondsSinceEpoch;
                                 user.email = emailController.text;
                                 user.password = passwordController.text;
+                                user.dayWork = user.id.toString() + 'dayWork';
+                                user.dayOff = user.id.toString() + 'dayOff';
                               });
                               final newUserJson = jsonEncode(user.toJson());
                               await NPreferences().saveData(user.email.toString(), newUserJson);

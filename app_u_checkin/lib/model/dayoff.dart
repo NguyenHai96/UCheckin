@@ -1,16 +1,17 @@
 import 'package:app_u_checkin/page/make_day_off.dart';
 import 'package:intl/intl.dart';
 
-class MakeDayOff {
+class DayOff {
   String? type;
   DateTime? offFrom;
   DateTime? offTo;
   String? description;
-  int? annualLeave;
+  int? numberDayOff;
+  bool? _isStatut;
 
-  MakeDayOff({this.type, this.offFrom, this.offTo, this.description, this.annualLeave});
+  DayOff({this.type, this.offFrom, this.offTo, this.description, this.numberDayOff});
 
-  factory MakeDayOff.fromJson(Map<String, dynamic> json) {
+  factory DayOff.fromJson(Map<String, dynamic> json) {
     String offFromString;
     if (json['offFrom'] != null) {
       offFromString = json['offFrom'] as String;
@@ -23,19 +24,48 @@ class MakeDayOff {
     } else {
       offToString = '';
     }
+    DateTime? checkOffFrom = null;
+    DateTime? checkOffTo = null;
+    if (offFromString != null && offFromString != "" && offFromString != "null") {
+      checkOffFrom = DateFormat("yyyy-MM-dd hh:mm").parse(offFromString);
+    }
+    if (offToString != null && offToString != "" && offToString != "null") {
+      checkOffTo = DateFormat("yyyy-MM-dd hh:mm").parse(offToString);
+    }
 
-    DateTime checkOffFrom = DateFormat("yyyy-MM-dd hh:mm").parse(offFromString);
-    DateTime checkOffTo = DateFormat("yyyy-MM-dd hh:mm").parse(offToString);
-
-    return MakeDayOff(
-        type: json['type'] as String,
-        offFrom: checkOffFrom,
-        offTo: checkOffTo,
-        description: json['description'] as String,
-        annualLeave: json['annualLeave'] as int);
+    return DayOff(type: json['type'], offFrom: checkOffFrom, offTo: checkOffTo, description: json['description'], numberDayOff: json['numberDayOff']);
   }
 
   Map<String, dynamic> toJson() {
-    return {'type': type, 'offFrom': offFrom.toString(), 'offTo': offTo.toString(), 'description': description, 'annualLeave': annualLeave};
+    return {'type': type, 'offFrom': offFrom.toString(), 'offTo': offTo.toString(), 'description': description, 'numberDayOff': numberDayOff};
+  }
+
+  int getAnnualLeaveNumber() {
+    if (offTo != null && offFrom != null) {
+      int annual = offTo!.difference(offFrom!).inDays + 1;
+      return annual;
+    }
+    return 0;
+  }
+
+  String textTitle() {
+    String titleYear = '';
+    if (offFrom != null) {
+      titleYear = DateFormat("yyyy").format(offFrom!);
+    }
+    return titleYear;
+  }
+
+  String dateString() {
+    String dateOff = '';
+    if (offFrom != null && offTo != null) {
+      if (offFrom != offTo) {
+        dateOff = '${offFrom!.day} - ${DateFormat("dd MMM").format(offTo!)}';
+        return dateOff;
+      } else {
+        dateOff = '${DateFormat("dd MMM").format(offFrom!)}';
+      }
+    }
+    return dateOff;
   }
 }

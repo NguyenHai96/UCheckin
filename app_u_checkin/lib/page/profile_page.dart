@@ -2,6 +2,8 @@
 import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
+import 'package:app_u_checkin/model/dayoff.dart';
+import 'package:app_u_checkin/model/working_year.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -32,6 +34,24 @@ class _YourProFilePageState extends State<YourProFilePage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController englishNameController = TextEditingController();
   TextEditingController positionController = TextEditingController();
+
+  WorkingYear dataDayOf = WorkingYear.init();
+
+  Future<int> getDataDayOff() async {
+    List<DayOff> list = await NPreferences().getListDataDayOff(widget.user.dayOff.toString());
+    int annualLeave = 0;
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].type == 'Annual leave' && list[i].numberDayOff != null) {
+        annualLeave = annualLeave + list[i].numberDayOff!;
+      }
+    }
+    print(annualLeave);
+    int result = 12 - annualLeave;
+    if (result > 0) {
+      return result;
+    }
+    return 0;
+  }
 
   colorDropDownValue(String value) {
     if (value == 'BA / QC') {
@@ -117,7 +137,13 @@ class _YourProFilePageState extends State<YourProFilePage> {
                             Expanded(
                               flex: 1,
                               child: InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => LoginPage()),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                },
                                 child: Container(
                                   width: 20.w,
                                   height: 20.h,
@@ -160,7 +186,7 @@ class _YourProFilePageState extends State<YourProFilePage> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '11',
+                                              '${getDataDayOff()}',
                                               style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, fontWeight: FontWeight.bold),
                                             ),
                                             Text('Annual leaves',

@@ -1,20 +1,31 @@
-import 'package:app_u_checkin/values/app_assets.dart';
-import 'package:app_u_checkin/values/app_colors.dart';
-import 'package:app_u_checkin/values/app_styles.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
+import 'dart:convert';
+
+import 'package:app_u_checkin/model/dayoff.dart';
+import 'package:app_u_checkin/page/day_off_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
+import 'package:app_u_checkin/model/user.dart';
+import 'package:app_u_checkin/values/app_assets.dart';
+import 'package:app_u_checkin/values/app_colors.dart';
+import 'package:app_u_checkin/values/app_styles.dart';
+
 class MakeDayOff extends StatefulWidget {
-  const MakeDayOff({super.key});
+  User user;
+  MakeDayOff({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   State<MakeDayOff> createState() => _MakeDayOffState();
 }
 
 class _MakeDayOffState extends State<MakeDayOff> {
-  TextEditingController typeControler = TextEditingController();
   TextEditingController _dateFromControler = TextEditingController();
   TextEditingController _dateToControler = TextEditingController();
   TextEditingController _descriptionControler = TextEditingController();
@@ -23,15 +34,82 @@ class _MakeDayOffState extends State<MakeDayOff> {
   bool _isActiveSave = false;
   DateTime? _selectedFormDate;
   DateTime? _selectedToDate;
+  DayOff dayoff = DayOff();
+
+  int annualLeave = 0;
+
+  getAnnualLeaveStart() async {
+    List<DayOff> listDayOff = await NPreferences().getListDataDayOff(widget.user.dayOff.toString());
+    int restDayOff = 12;
+    for (int i = 0; i < listDayOff.length; i++) {
+      restDayOff = restDayOff - (listDayOff[i].getAnnualLeaveNumber());
+    }
+    if (restDayOff > 0) {
+      setState(() {
+        annualLeave = restDayOff;
+      });
+    }
+  }
+
+  int getNumberDayOff() {
+    int annual = 1;
+    if (_selectedFormDate != null && _selectedToDate != null) {
+      DateTime? fromDate = _selectedFormDate;
+      DateTime? toDate = _selectedToDate;
+      while (toDate!.difference(fromDate!).inDays > 0) {
+        print(fromDate.difference(fromDate).inDays);
+        fromDate = fromDate.add(Duration(days: 1));
+        if (fromDate.weekday != DateTime.saturday && fromDate.weekday != DateTime.sunday) {
+          annual++;
+        }
+      }
+    }
+    return annual;
+  }
+
+  getAnnualLeaveState() {
+    if (dropdownValue == 'Annual leave') {
+      int annual = 1;
+      if (annualLeave > 0 && _selectedFormDate != null && _selectedToDate != null) {
+        DateTime? fromDate = _selectedFormDate;
+        DateTime? toDate = _selectedToDate;
+        while (toDate!.difference(fromDate!).inDays > 0) {
+          print(fromDate.difference(fromDate).inDays);
+          fromDate = fromDate.add(Duration(days: 1));
+          if (fromDate.weekday != DateTime.saturday && fromDate.weekday != DateTime.sunday) {
+            annual++;
+          }
+        }
+        // int newAnnual = annualLeave - annual;
+        // setState(() {
+        //   annualLeave = newAnnual;
+        // });
+        if (annual >= annualLeave) {
+          setState(() {
+            annualLeave = 0;
+          });
+        } else {
+          int newAnnual = annualLeave - annual;
+          setState(() {
+            annualLeave = newAnnual;
+          });
+        }
+      }
+    }
+  }
 
   bool _checkSaveDayOff() {
-    if (typeControler.text.isNotEmpty &&
-        _dateFromControler.text.isNotEmpty &&
-        _dateToControler.text.isNotEmpty &&
-        _descriptionControler.text.isNotEmpty) {
+    if (dropdownValue.isNotEmpty && _dateFromControler.text.isNotEmpty && _dateToControler.text.isNotEmpty && _descriptionControler.text.isNotEmpty) {
       return true;
     }
     return false;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAnnualLeaveStart();
   }
 
   @override
@@ -121,7 +199,9 @@ class _MakeDayOffState extends State<MakeDayOff> {
                       child: TextFormField(
                         controller: _dateFromControler,
                         onChanged: (value) {
-                          _isActiveSave = _checkSaveDayOff();
+                          setState(() {
+                            _isActiveSave = _checkSaveDayOff();
+                          });
                         },
                         decoration: InputDecoration(
                           hintText: 'Select date',
@@ -145,10 +225,6 @@ class _MakeDayOffState extends State<MakeDayOff> {
                                         lastDay: DateTime(2050),
                                         focusedDay: DateTime.now(),
                                         availableCalendarFormats: {CalendarFormat.month: 'Month'},
-                                        // calendarFormat: CalendarFormat.month,
-                                        // headerStyle: HeaderStyle(
-                                        //   titleCentered: true,
-                                        // ),
                                         calendarStyle: CalendarStyle(
                                           selectedDecoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
                                           todayDecoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
@@ -161,7 +237,6 @@ class _MakeDayOffState extends State<MakeDayOff> {
                                             _selectedFormDate = date;
                                             _dateFromControler.text = DateFormat('dd/MM/yyyy').format(_selectedFormDate!);
                                             print('_selectedDate ->>>> ${_selectedFormDate}');
-                                            print(_dateFromControler.text);
                                           });
                                           Navigator.pop(context);
                                         },
@@ -187,12 +262,6 @@ class _MakeDayOffState extends State<MakeDayOff> {
                                   ),
                                 );
                               });
-                          // DateTime? pickeddate = await showDatePicker(context: context, firstDate: DateTime(1900), lastDate: DateTime(2100));
-                          // if (pickeddate != null) {
-                          //   setState(() {
-                          //     _dateFromControler.text = DateFormat('dd/MM/yyyy').format(pickeddate);
-                          //   });
-                          // }
                         },
                       ),
                     ),
@@ -224,12 +293,58 @@ class _MakeDayOffState extends State<MakeDayOff> {
                           border: InputBorder.none,
                         ),
                         onTap: () async {
-                          DateTime? pickeddate = await showDatePicker(context: context, firstDate: DateTime(1900), lastDate: DateTime(2100));
-                          if (pickeddate != null) {
-                            setState(() {
-                              _dateToControler.text = DateFormat('dd/MM/yyyy').format(pickeddate);
-                            });
-                          }
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height: double.maxFinite,
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      TableCalendar(
+                                        firstDay: DateTime(2000),
+                                        lastDay: DateTime(2050),
+                                        focusedDay: DateTime.now(),
+                                        availableCalendarFormats: {CalendarFormat.month: 'Month'},
+                                        calendarStyle: CalendarStyle(
+                                          selectedDecoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                                          todayDecoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
+                                        ),
+                                        selectedDayPredicate: (date) {
+                                          return isSameDay(_selectedToDate, date);
+                                        },
+                                        onDaySelected: (date, focusedDay) {
+                                          setState(() {
+                                            _selectedToDate = date;
+                                            _dateToControler.text = DateFormat('dd/MM/yyyy').format(_selectedToDate!);
+                                            print(_selectedToDate);
+                                            print(getNumberDayOff());
+                                            getAnnualLeaveState();
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                        calendarBuilders: CalendarBuilders(
+                                          headerTitleBuilder: (context, date) => Center(
+                                            child: Text(
+                                              DateFormat('MMM yyyy').format(date),
+                                              style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          selectedBuilder: (context, date, _) => Container(
+                                            decoration: BoxDecoration(color: AppColors.main, shape: BoxShape.circle),
+                                            child: Center(
+                                              child: Text(
+                                                date.day.toString(),
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              });
                         },
                       ),
                     ),
@@ -240,7 +355,7 @@ class _MakeDayOffState extends State<MakeDayOff> {
                   Center(
                     child: Container(
                       height: 17.h,
-                      child: Text('Annual leave : 12',
+                      child: Text('Annual leave : ${annualLeave}',
                           style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -260,7 +375,9 @@ class _MakeDayOffState extends State<MakeDayOff> {
                       child: TextFormField(
                         controller: _descriptionControler,
                         onChanged: (value) {
-                          _isActiveSave = _checkSaveDayOff();
+                          setState(() {
+                            _isActiveSave = _checkSaveDayOff();
+                          });
                         },
                         decoration: InputDecoration(
                           hintText: 'Enter',
@@ -275,8 +392,26 @@ class _MakeDayOffState extends State<MakeDayOff> {
                   ),
                   Center(
                     child: InkWell(
-                      onTap: !_isActiveSave
-                          ? () {
+                      onTap: _isActiveSave
+                          ? () async {
+                              List<DayOff> listDayOff = await NPreferences().getListDataDayOff(widget.user.dayOff.toString());
+                              setState(() {
+                                dayoff.type = dropdownValue;
+                                dayoff.offFrom = _selectedFormDate;
+                                dayoff.offTo = _selectedToDate;
+                                dayoff.description = _descriptionControler.text;
+                                dayoff.numberDayOff = getNumberDayOff();
+                              });
+                              listDayOff.add(dayoff);
+                              List<String> newDayOffJson = listDayOff.map((e) => jsonEncode(e.toJson())).toList();
+                              await NPreferences().saveData(widget.user.dayOff.toString(), newDayOffJson);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => DayOffHomePage(
+                                            user: widget.user,
+                                          )));
+
                               print('asdadadadas');
                             }
                           : null,

@@ -80,10 +80,10 @@ class NPreferences {
   Future<T> getListDataDayOff<T>(String key) async {
     final SharedPreferences ref = await preferences;
     List<String> newListJson = ref.getStringList(key) ?? [];
-    List<MakeDayOff> items = [];
+    List<DayOff> items = [];
     if (newListJson != null) {
       for (dynamic item in newListJson) {
-        items.add(MakeDayOff.fromJson(jsonDecode(item)));
+        items.add(DayOff.fromJson(jsonDecode(item)));
       }
       return items as T;
     }

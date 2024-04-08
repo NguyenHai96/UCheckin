@@ -1,7 +1,10 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_week.dart';
 import 'package:app_u_checkin/page/check_in_page.dart';
+import 'package:app_u_checkin/page/day_off_page.dart';
 import 'package:app_u_checkin/page/make_day_off.dart';
 import 'package:app_u_checkin/page/profile_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
@@ -25,12 +28,13 @@ class _HomePageState extends State<HomePage> {
   List<WorkingWeek> dataWeek = [];
   int _currentIndex = 1;
   DateTime systemTime() => DateTime.now();
+  bool isRefresh = false;
 
   getDateTimeWork() async {
     DateTime now = DateTime.now();
 
-    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
-    print(newWorkingObj.toString());
+    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(widget.newUser.dayWork.toString());
+
     for (int i = 0; i < newWorkingObj.length; i++) {}
     var startDate = now.subtract(Duration(days: now.weekday - 1));
     var endDate = now.add(Duration(days: 7 - now.weekday));
@@ -234,8 +238,23 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.all(Radius.circular(12.r)),
                             boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
                         child: InkWell(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => PageCheckIn()));
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+                              new MaterialPageRoute(builder: (_) => PageCheckIn(user: widget.newUser)),
+                            );
+                            if (result != null) {
+                              for (int i = 0; i < dataWeek.length; i++) {
+                                for (int j = 0; j < dataWeek[i].dayOfWeek.length; j++) {
+                                  if (DateUtils.isSameDay(dataWeek[i].dayOfWeek[j].date, result.date)) {
+                                    setState(() {
+                                      dataWeek[i].dayOfWeek[j].checkin = result.checkin;
+                                      dataWeek[i].dayOfWeek[j].checkout = result.checkout;
+                                    });
+                                  }
+                                }
+                              }
+                            }
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -264,7 +283,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => MakeDayOff()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => MakeDayOff(
+                                        user: widget.newUser,
+                                      )));
                         },
                         child: Container(
                           height: 91.h,
@@ -298,35 +322,45 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      Container(
-                        height: 91.h,
-                        width: 109.w,
-                        decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.all(Radius.circular(12.r)),
-                            boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 32.w,
-                                height: 32.h,
-                                child: Image.asset(
-                                  AppAssets.overtime,
-                                  fit: BoxFit.cover,
-                                )),
-                            Padding(
-                              padding: EdgeInsets.only(top: 8.h),
-                              child: Text(
-                                'Apply OT',
-                                style: TextStyle(
-                                  color: AppColors.text,
-                                  fontFamily: FontFamily.bai_jamjuree,
-                                  fontSize: 14.sp,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => DayOffHomePage(
+                                        user: widget.newUser,
+                                      )));
+                        },
+                        child: Container(
+                          height: 91.h,
+                          width: 109.w,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                              boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  width: 32.w,
+                                  height: 32.h,
+                                  child: Image.asset(
+                                    AppAssets.overtime,
+                                    fit: BoxFit.cover,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(top: 8.h),
+                                child: Text(
+                                  'Apply OT',
+                                  style: TextStyle(
+                                    color: AppColors.text,
+                                    fontFamily: FontFamily.bai_jamjuree,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ],

@@ -1,8 +1,3 @@
-import 'dart:developer';
-import 'dart:ffi';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class WorkingDay {
@@ -14,13 +9,13 @@ class WorkingDay {
 
   factory WorkingDay.fromJson(Map<String, dynamic> json) {
     String dateString;
-    if (json['date'] != null) {
+    if (json['date'] != null && json['date'] != 'null') {
       dateString = json['date'] as String;
     } else {
       dateString = '';
     }
     String checkinString;
-    if (json['checkin'] != null) {
+    if (json['checkin'] != null && json['checkin'] != 'null') {
       checkinString = json['checkin'] as String;
     } else {
       checkinString = '';
@@ -31,15 +26,22 @@ class WorkingDay {
       checkoutString = json['checkout'] as String;
     }
 
-    DateTime checkDate = DateFormat("yyyy-MM-dd hh:mm").parse(dateString);
-    DateTime checkinDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkinString);
+    DateTime? checkDate = null;
+    if (dateString != null && dateString != "") {
+      checkDate = DateFormat("yyyy-MM-dd hh:mm").parse(dateString);
+    }
+
+    DateTime? checkinDate = null;
+    if (checkinString != null && checkinString != "") {
+      checkinDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkinString);
+    }
+
     DateTime? checkoutDate = null;
     if (checkoutString != null) {
       checkoutDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkoutString);
     }
 
-    return WorkingDay(
-        date: checkDate, checkin: checkinDate, checkout: checkoutDate);
+    return WorkingDay(date: checkDate, checkin: checkinDate, checkout: checkoutDate);
   }
 
   Map<String, dynamic> toJson() {
@@ -87,10 +89,8 @@ class WorkingDay {
   bool isToday() {
     var now = DateTime.now();
     if (date != null) {
-      if (getDateFormater(now, 'yyyy-MM-dd') ==
-          getDateFormater(date!, 'yyyy-MM-dd')) {}
-      return getDateFormater(now, 'yyyy-MM-dd') ==
-          getDateFormater(date!, 'yyyy-MM-dd');
+      if (getDateFormater(now, 'yyyy-MM-dd') == getDateFormater(date!, 'yyyy-MM-dd')) {}
+      return getDateFormater(now, 'yyyy-MM-dd') == getDateFormater(date!, 'yyyy-MM-dd');
     }
     return false;
   }
@@ -156,10 +156,7 @@ class WorkingDay {
   }
 
   bool showWorkTime() {
-    if (date != null &&
-        !isWeekend() == true &&
-        checkin != null &&
-        checkout != null) {
+    if (date != null && !isWeekend() == true && checkin != null && checkout != null) {
       return true;
     }
     return false;

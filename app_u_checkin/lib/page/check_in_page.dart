@@ -1,22 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
+import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_month.dart';
 import 'package:app_u_checkin/page/home_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
-import 'package:app_u_checkin/values/share_keys.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PageCheckIn extends StatefulWidget {
-  const PageCheckIn({super.key});
+  User user;
+  PageCheckIn({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   State<PageCheckIn> createState() => _PageCheckInState();
@@ -28,11 +31,12 @@ class _PageCheckInState extends State<PageCheckIn> {
   int _currentIndex = 1;
   DateTime systemTime() => DateTime.now();
   List<WorkingDay> listWorkingDay = [];
+  WorkingDay? valuePop;
 
   getDateTimeWork() async {
     DateTime now = DateTime.now();
 
-    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
+    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(widget.user.dayWork.toString());
     // var encodedString = jsonEncode(newWorkingObj);
     // Map<String, dynamic>? valueMap = json.decode(encodedString);
     // WorkingDay? dataWorkingday;
@@ -179,7 +183,7 @@ class _PageCheckInState extends State<PageCheckIn> {
         ),
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.pop(context, valuePop);
           },
           child: Image.asset(AppAssets.leftArrow),
         ),
@@ -358,8 +362,9 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                       onTap: () async {
                                                         setState(() {
                                                           shortCut.checkin = systemTime();
+                                                          valuePop = shortCut;
                                                         });
-                                                        listWorkingDay = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
+                                                        listWorkingDay = await NPreferences().getListDataWorkingDay(widget.user.dayWork.toString());
                                                         listWorkingDay.add(shortCut);
                                                         List<String> newWokingDayJson = listWorkingDay.map((e) => jsonEncode(e.toJson())).toList();
                                                         // final newWokingDayJson = jsonEncode(shortCut.toJson());
@@ -368,7 +373,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                         //   listWorkingDay.add(newWokingDayJson);
                                                         // }
 
-                                                        await NPreferences().saveData(ShareKeys.timeWorking, newWokingDayJson);
+                                                        await NPreferences().saveData(widget.user.dayWork.toString(), newWokingDayJson);
                                                       },
                                                       child: Text(
                                                         'Check in',
@@ -404,9 +409,11 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                     child: InkWell(
                                                       onTap: shortCut.checkin != null
                                                           ? () async {
-                                                              listWorkingDay = await NPreferences().getListDataWorkingDay(ShareKeys.timeWorking);
+                                                              listWorkingDay =
+                                                                  await NPreferences().getListDataWorkingDay(widget.user.dayWork.toString());
                                                               setState(() {
                                                                 shortCut.checkout = systemTime();
+                                                                valuePop = shortCut;
                                                               });
                                                               listWorkingDay.add(shortCut);
                                                               List<String> newWokingDayJson =
@@ -416,7 +423,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                               //   listWorkingDay.add(newWorkingObj);
                                                               // }
 
-                                                              NPreferences().saveData(ShareKeys.timeWorking, newWokingDayJson);
+                                                              NPreferences().saveData(widget.user.dayWork.toString(), newWokingDayJson);
                                                             }
                                                           : null,
                                                       child: Text(

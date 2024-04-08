@@ -23,4 +23,5 @@ class AppColors {
   static const Color visible = Color(0xffF0F0F1);
   static const Color hintText = Color(0xff777E90);
   static const Color textBasic = Color(0xff5E5F60);
+  static const Color noDataInput = Color(0xffFADCE3);
 }
