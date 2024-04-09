@@ -155,6 +155,13 @@ class WorkingDay {
     return 0;
   }
 
+  bool checkEnoughWorkTime() {
+    if (resultWorkTime() >= 8) {
+      return true;
+    }
+    return false;
+  }
+
   bool showWorkTime() {
     if (date != null && !isWeekend() == true && checkin != null && checkout != null) {
       return true;

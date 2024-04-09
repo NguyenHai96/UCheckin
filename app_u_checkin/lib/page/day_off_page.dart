@@ -39,15 +39,6 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
     WorkingYear yearObj = WorkingYear.init();
     yearObj.dayOff.addAll(newDayOffObj);
 
-    // newList.add(getNowWeek(now));
-    // newList.add(getNextWeek(endDate));
-    // newList.insert(0, getLastWeek(startDate));
-    for (int i = 0; i < newDayOffObj.length; i++) {
-      print('newDayOffObj[i].type ---->   ${newDayOffObj[i].type}');
-      print('newDayOffObj[i].offFrom ---->   ${newDayOffObj[i].offFrom.toString()}');
-      print('newDayOffObj[i].offTo ---->   ${newDayOffObj[i].offTo.toString()}');
-      print('newDayOffObj[i].description ---->   ${newDayOffObj[i].description}');
-    }
     newList.add(yearObj);
     setState(() {
       dataYear.addAll(newList);
@@ -55,55 +46,9 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
     await _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
-  // WorkingWeek getNowWeek(DateTime date) {
-  //   WorkingWeek week = WorkingWeek.init();
-  //   List<WorkingDay> listWeekNow = [];
-  //   var startDate = date.subtract(Duration(days: date.weekday - 1));
-  //   final items = List<DateTime>.generate(7, (i) {
-  //     DateTime list = startDate;
-  //     return list.add(Duration(days: i));
-  //   });
-  //   for (int i = 0; i < items.length; i++) {
-  //     listWeekNow.add(WorkingDay(date: items[i]));
-  //   }
-  //   week.dayOfWeek.addAll(listWeekNow);
-  //   return week;
-  // }
-
-  // WorkingWeek getLastWeek(DateTime date) {
-  //   WorkingWeek week = WorkingWeek.init();
-  //   List<WorkingDay> listWeekLast = [];
-  //   for (int i = 7; i > 0; i--) {
-  //     var beforeDay = date.subtract(Duration(days: i));
-  //     listWeekLast.add(WorkingDay(
-  //       date: beforeDay,
-  //     ));
-  //   }
-  //   week.dayOfWeek.addAll(listWeekLast);
-  //   return week;
-  // }
-
-  // WorkingWeek getNextWeek(DateTime date) {
-  //   WorkingWeek week = WorkingWeek.init();
-  //   List<WorkingDay> listWeekNext = [];
-  //   for (int i = 1; i <= 7; i++) {
-  //     var behindDay = date.add(Duration(days: i));
-  //     listWeekNext.add(WorkingDay(date: behindDay));
-  //   }
-  //   week.dayOfWeek.addAll(listWeekNext);
-  //   return week;
-  // }
-
   handlePreviousButtonTapped() async {
     _currentIndex--;
     if (_currentIndex <= 0) {
-      // if (dataYear.isNotEmpty && dataYear[0].dayOfWeek.first.date != null) {
-      //   var lastWeek = await getLastWeek(dataYear[0].dayOfWeek.first.date!);
-      //   _currentIndex = 1;
-      //   setState(() {
-      //     dataYear.insert(0, lastWeek);
-      //   });
-      // }
     } else {
       _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
     }
@@ -111,12 +56,7 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
 
   handleNextButtonTapped() async {
     _currentIndex++;
-    if (_currentIndex >= dataYear.length - 1) {
-      //   var nextWeek = await getNextWeek(dataYear.last.dayOfWeek.last.date!);
-      //   setState(() {
-      //     dataYear.add(nextWeek);
-      //   });
-    }
+    if (_currentIndex >= dataYear.length - 1) {}
     _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
@@ -371,7 +311,6 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                                           ),
                                       itemBuilder: (context, index) {
                                         var shortCut = dataYear[i].dayOff[index];
-                                        print(shortCut.dateString());
                                         return Container(
                                             height: 31.h,
                                             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(8))),

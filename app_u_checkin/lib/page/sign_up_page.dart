@@ -269,7 +269,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   InkWell(
                     onTap: _isActiveSignUp
                         ? () async {
-                            List<String> listKey = (await NPreferences().getDataString(ShareKeys.listKey)) as List<String>;
+                            List<String> listKey = (await NPreferences().getDataString(ShareKeys.listUser)) as List<String>;
                             if (rePasswordController.text == passwordController.text) {
                               User user = User();
                               setState(() {
@@ -282,7 +282,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               final newUserJson = jsonEncode(user.toJson());
                               await NPreferences().saveData(user.email.toString(), newUserJson);
                               listKey.add(user.email.toString());
-                              await NPreferences().saveData(ShareKeys.listKey, listKey);
+                              await NPreferences().saveData(ShareKeys.listUser, listKey);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

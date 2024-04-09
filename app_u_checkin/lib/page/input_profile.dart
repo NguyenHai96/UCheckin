@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class ProfilePage extends StatefulWidget {
   User newUser = User();
@@ -29,9 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController englishNameController = TextEditingController();
   TextEditingController positionController = TextEditingController();
-  // TextEditingController teamController = TextEditingController();
-  // User newUser = User();
-  // _ProfilePageState(this.newUser);
+  DateTime? _selectedDate;
 
   colorDropDownValue(String value) {
     if (value == 'BA / QC') {
@@ -73,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: EdgeInsets.only(top: 68.h),
               child: Container(
                 width: 304.w,
-                height: 568.h,
+                // height: 568.h,
                 color: Colors.white,
                 child: Column(
                   children: [
@@ -93,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 24.h,
                     ),
                     Container(
-                      height: 440.h,
+                      // height: 440.h,
                       width: 272.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,12 +196,55 @@ class _ProfilePageState extends State<ProfilePage> {
                                   border: InputBorder.none,
                                 ),
                                 onTap: () async {
-                                  DateTime? pickeddate = await showDatePicker(context: context, firstDate: DateTime(1900), lastDate: DateTime(2100));
-                                  if (pickeddate != null) {
-                                    setState(() {
-                                      _date.text = DateFormat('dd/MM/yyyy').format(pickeddate);
-                                    });
-                                  }
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          height: 410.h,
+                                          color: Colors.white,
+                                          child: Column(
+                                            children: [
+                                              TableCalendar(
+                                                firstDay: DateTime(2000),
+                                                lastDay: DateTime(2050),
+                                                focusedDay: DateTime.now(),
+                                                availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+                                                calendarStyle: const CalendarStyle(
+                                                    selectedDecoration: BoxDecoration(
+                                                      color: Colors.blue,
+                                                    ),
+                                                    todayDecoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                                    todayTextStyle: TextStyle(color: Colors.blue, fontSize: 16)),
+                                                selectedDayPredicate: (date) {
+                                                  return isSameDay(_selectedDate, date);
+                                                },
+                                                onDaySelected: (date, focusedDay) {
+                                                  setState(() {
+                                                    _selectedDate = date;
+                                                    _date.text = DateFormat('dd/MM/yyyy').format(_selectedDate!);
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                                calendarBuilders: CalendarBuilders(
+                                                  headerTitleBuilder: (context, date) => Center(
+                                                    child: Text(
+                                                      DateFormat('MMM yyyy').format(date),
+                                                      style: TextStyle(
+                                                          fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                  selectedBuilder: (context, date, _) => Center(
+                                                    child: Text(
+                                                      date.day.toString(),
+                                                      style: TextStyle(color: Colors.blue, fontSize: 15.sp),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      });
                                 },
                               ),
                             ),
@@ -252,7 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Padding(
                             padding: EdgeInsets.only(top: 4.h),
                             child: Container(
-                              height: 48.h,
+                              // height: 48.h,
                               width: 272.w,
                               decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
                               child: DropdownButtonFormField<String>(
@@ -324,6 +366,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(fontFamily: FontFamily.beVietnamPro, fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 12.h,
                     )
                   ],
                 ),

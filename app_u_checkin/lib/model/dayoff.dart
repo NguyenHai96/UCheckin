@@ -7,7 +7,7 @@ class DayOff {
   DateTime? offTo;
   String? description;
   int? numberDayOff;
-  bool? _isStatut;
+  bool? _isStatus;
 
   DayOff({this.type, this.offFrom, this.offTo, this.description, this.numberDayOff});
 
@@ -24,8 +24,8 @@ class DayOff {
     } else {
       offToString = '';
     }
-    DateTime? checkOffFrom = null;
-    DateTime? checkOffTo = null;
+    DateTime? checkOffFrom;
+    DateTime? checkOffTo;
     if (offFromString != null && offFromString != "" && offFromString != "null") {
       checkOffFrom = DateFormat("yyyy-MM-dd hh:mm").parse(offFromString);
     }
@@ -41,8 +41,17 @@ class DayOff {
   }
 
   int getAnnualLeaveNumber() {
-    if (offTo != null && offFrom != null) {
-      int annual = offTo!.difference(offFrom!).inDays + 1;
+    if (offTo != null && offFrom != null && type == 'Annual leave') {
+      DateTime? fromDate = offFrom;
+      DateTime? toDate = offTo;
+      int annual = 0;
+      while (toDate!.difference(fromDate!).inDays > 0) {
+        fromDate = fromDate.add(const Duration(days: 1));
+        if (fromDate.weekday != DateTime.saturday && fromDate.weekday != DateTime.sunday) {
+          annual++;
+        }
+      }
+
       return annual;
     }
     return 0;

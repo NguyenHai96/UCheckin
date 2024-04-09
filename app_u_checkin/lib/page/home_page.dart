@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: EdgeInsets.only(top: 24.h),
-            child: Container(
+            child: SizedBox(
               width: 359.w,
               height: 158.h,
               child: Column(
@@ -236,12 +236,12 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.all(Radius.circular(12.r)),
-                            boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
+                            boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
                         child: InkWell(
                           onTap: () async {
                             final result = await Navigator.push(
                               context,
-                              new MaterialPageRoute(builder: (_) => PageCheckIn(user: widget.newUser)),
+                              MaterialPageRoute(builder: (_) => PageCheckIn(user: widget.newUser)),
                             );
                             if (result != null) {
                               for (int i = 0; i < dataWeek.length; i++) {
