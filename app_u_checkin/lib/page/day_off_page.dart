@@ -18,9 +18,9 @@ import 'package:app_u_checkin/values/app_styles.dart';
 class DayOffHomePage extends StatefulWidget {
   User user;
   DayOffHomePage({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   State<DayOffHomePage> createState() => _DayOffHomePageState();
@@ -43,21 +43,21 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
     setState(() {
       dataYear.addAll(newList);
     });
-    await _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+    await _pageController.animateToPage(_currentIndex, duration: const Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
   handlePreviousButtonTapped() async {
     _currentIndex--;
     if (_currentIndex <= 0) {
     } else {
-      _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+      _pageController.animateToPage(_currentIndex, duration: const Duration(milliseconds: 20), curve: Curves.bounceInOut);
     }
   }
 
   handleNextButtonTapped() async {
     _currentIndex++;
     if (_currentIndex >= dataYear.length - 1) {}
-    _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+    _pageController.animateToPage(_currentIndex, duration: const Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
   @override
@@ -97,7 +97,7 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                                     newUser: widget.user,
                                   )));
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 71.w,
                       height: 71.h,
                       child: Image.asset(AppAssets.avatar),
@@ -107,25 +107,23 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                     width: 35.w,
                   ),
                   Expanded(
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.user.name.toString(),
-                            style: TextStyle(color: Colors.white, fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.user.name.toString(),
+                          style: TextStyle(color: Colors.white, fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Position: ${widget.user.position}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: FontFamily.bai_jamjuree,
+                            fontSize: 14.sp,
                           ),
-                          Text(
-                            'Position: ${widget.user.position}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: FontFamily.bai_jamjuree,
-                              fontSize: 14.sp,
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   )
                 ],
@@ -168,9 +166,9 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
           ),
           Padding(
             padding: EdgeInsets.only(top: 24.h),
-            child: Container(
+            child: SizedBox(
               width: 358.w,
-              height: 384.h,
+              height: 584.h,
               child: Column(
                 children: [
                   Expanded(
@@ -183,14 +181,14 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                       )
                     ],
                   )),
-                  Container(
+                  SizedBox(
                     width: 358.w,
-                    height: 352.h,
+                    height: 552.h,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          width: 358.w,
+                        SizedBox(
+                          // width: 358.w,
                           height: 75.h,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,7 +196,7 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: Container(
+                                    child: SizedBox(
                                       width: 358.w,
                                       height: 32.h,
                                       child: Padding(
@@ -206,7 +204,7 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: 24.w,
                                               height: 24.h,
                                               child: InkWell(
@@ -226,7 +224,7 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                                                     ),
                                                   )),
                                             ),
-                                            Container(
+                                            SizedBox(
                                               width: 24.w,
                                               height: 24.h,
                                               child: InkWell(
@@ -302,63 +300,61 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                               },
                               itemCount: dataYear.length,
                               itemBuilder: (context, i) {
-                                return Container(
-                                  child: ListView.separated(
-                                      padding: EdgeInsets.only(top: 0.h),
-                                      itemCount: dataYear[i].dayOff.length,
-                                      separatorBuilder: (context, index) => SizedBox(
-                                            height: 8.h,
-                                          ),
-                                      itemBuilder: (context, index) {
-                                        var shortCut = dataYear[i].dayOff[index];
-                                        return Container(
-                                            height: 31.h,
-                                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(8))),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
+                                return ListView.separated(
+                                    padding: EdgeInsets.only(top: 0.h),
+                                    itemCount: dataYear[i].dayOff.length,
+                                    separatorBuilder: (context, index) => SizedBox(
+                                          height: 8.h,
+                                        ),
+                                    itemBuilder: (context, index) {
+                                      var shortCut = dataYear[i].dayOff[index];
+                                      return Container(
+                                          height: 31.h,
+                                          decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(8))),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Center(
+                                                    child: Text(
+                                                  shortCut.dateString(),
+                                                  style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
+                                                  overflow: TextOverflow.ellipsis,
+                                                )),
+                                              ),
+                                              Expanded(
+                                                child: SizedBox(
+                                                  height: 34.h,
+                                                  width: 83.w,
                                                   child: Center(
-                                                      child: Text(
-                                                    shortCut.dateString(),
-                                                    style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
-                                                    overflow: TextOverflow.ellipsis,
-                                                  )),
+                                                    child: Text(shortCut.type.toString(),
+                                                        style:
+                                                            TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text)),
+                                                  ),
                                                 ),
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 34.h,
-                                                    width: 83.w,
-                                                    child: Center(
-                                                      child: Text(shortCut.type.toString(),
-                                                          style:
-                                                              TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text)),
+                                              ),
+                                              Expanded(
+                                                child: SizedBox(
+                                                  height: 34.h,
+                                                  width: 83.w,
+                                                  child: Center(
+                                                    child: Text(
+                                                      shortCut.description.toString(),
+                                                      style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
+                                                      overflow: TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 34.h,
-                                                    width: 83.w,
-                                                    child: Center(
-                                                      child: Text(
-                                                        shortCut.description.toString(),
-                                                        style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Center(
-                                                      child: Text(
-                                                    'Submitted',
-                                                    style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
-                                                  )),
-                                                ),
-                                              ],
-                                            ));
-                                      }),
-                                );
+                                              ),
+                                              Expanded(
+                                                child: Center(
+                                                    child: Text(
+                                                  'Submitted',
+                                                  style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
+                                                )),
+                                              ),
+                                            ],
+                                          ));
+                                    });
                               }),
                         )
                       ],

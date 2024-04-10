@@ -388,16 +388,24 @@ class _MakeDayOffState extends State<MakeDayOff> {
                       onTap: _isActiveSave
                           ? () async {
                               List<DayOff> listDayOff = await NPreferences().getListDataDayOff(widget.user.dayOff.toString());
+                              int numberDayOff = 0;
+                              DateTime? fromDate = _selectedFormDate;
+                              DateTime? toDate = _selectedFormDate;
+                              if (toDate != null && fromDate != null) {
+                                while (toDate.difference(fromDate!).inDays > 0) {
+                                  fromDate = fromDate.add(const Duration(days: 1));
+                                  if (fromDate.weekday != DateTime.saturday && fromDate.weekday != DateTime.sunday) {
+                                    numberDayOff++;
+                                  }
+                                }
+                              }
                               setState(() {
                                 dayoff.type = dropdownValue;
                                 dayoff.offFrom = _selectedFormDate;
                                 dayoff.offTo = _selectedToDate;
                                 dayoff.description = _descriptionControler.text;
-                                if (dayoff.numberDayOff != null) {
-                                  dayoff.numberDayOff = dayoff.numberDayOff! + getNumberDayOff();
-                                }
+                                dayoff.numberDayOff = numberDayOff;
                               });
-                              print("dayoff.numberDayOff  ->>>>>> ${dayoff.numberDayOff}");
                               listDayOff.add(dayoff);
                               List<String> newDayOffJson = listDayOff.map((e) => jsonEncode(e.toJson())).toList();
                               await NPreferences().saveData(widget.user.dayOff.toString(), newDayOffJson);

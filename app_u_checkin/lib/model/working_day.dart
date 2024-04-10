@@ -20,23 +20,23 @@ class WorkingDay {
     } else {
       checkinString = '';
     }
-    String? checkoutString = null;
+    String? checkoutString;
 
     if (json['checkout'] != null && json['checkout'] != 'null') {
       checkoutString = json['checkout'] as String;
     }
 
-    DateTime? checkDate = null;
+    DateTime? checkDate;
     if (dateString != null && dateString != "") {
       checkDate = DateFormat("yyyy-MM-dd hh:mm").parse(dateString);
     }
 
-    DateTime? checkinDate = null;
+    DateTime? checkinDate;
     if (checkinString != null && checkinString != "") {
       checkinDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkinString);
     }
 
-    DateTime? checkoutDate = null;
+    DateTime? checkoutDate;
     if (checkoutString != null) {
       checkoutDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkoutString);
     }

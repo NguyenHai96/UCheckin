@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 
 import 'dart:convert';
 
@@ -15,7 +15,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 class ProfilePage extends StatefulWidget {
   User newUser = User();
-  ProfilePage({required this.newUser});
+  ProfilePage({super.key, required this.newUser});
 
   @override
   State<ProfilePage> createState() {
@@ -24,7 +24,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextEditingController _date = TextEditingController();
+  final TextEditingController _date = TextEditingController();
   List<String> list = <String>['BA / QC', 'UI UX Designer', 'Web Developer', 'Mobile Developer', 'HR', 'General manager', 'Other'];
   String dropdownValue = '';
   TextEditingController nameController = TextEditingController();
@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       height: 24.h,
                     ),
-                    Container(
+                    SizedBox(
                       // height: 440.h,
                       width: 272.w,
                       child: Column(
@@ -189,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 controller: _date,
                                 decoration: InputDecoration(
                                   hintText: 'Select date',
-                                  suffixIcon: Icon(
+                                  suffixIcon: const Icon(
                                     Icons.calendar_month_rounded,
                                   ),
                                   suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
@@ -298,8 +298,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 272.w,
                               decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
                               child: DropdownButtonFormField<String>(
-                                icon: Icon(Icons.arrow_drop_down_rounded),
-                                hint: Text('Select'),
+                                icon: const Icon(Icons.arrow_drop_down_rounded),
+                                hint: const Text('Select'),
                                 onChanged: (String? value) {
                                   setState(() {
                                     dropdownValue = value!;

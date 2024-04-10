@@ -17,7 +17,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   User newUser;
-  HomePage({required this.newUser});
+  HomePage({super.key, required this.newUser});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -49,8 +49,6 @@ class _HomePageState extends State<HomePage> {
           if (DateUtils.isSameDay(newList[i].dayOfWeek[j].date, newWorkingObj[l].date)) {
             newList[i].dayOfWeek[j].checkin = newWorkingObj[l].checkin;
             newList[i].dayOfWeek[j].checkout = newWorkingObj[l].checkout;
-            print(newList[i].dayOfWeek[j].checkin);
-            print(newList[i].dayOfWeek[j].checkout);
           }
         }
       }
@@ -59,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       dataWeek.addAll(newList);
     });
-    await _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+    await _pageController.animateToPage(_currentIndex, duration: const Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
   WorkingWeek getNowWeek(DateTime date) {
@@ -105,14 +103,14 @@ class _HomePageState extends State<HomePage> {
     _currentIndex--;
     if (_currentIndex <= 0) {
       if (dataWeek.isNotEmpty && dataWeek[0].dayOfWeek.first.date != null) {
-        var lastWeek = await getLastWeek(dataWeek[0].dayOfWeek.first.date!);
+        var lastWeek = getLastWeek(dataWeek[0].dayOfWeek.first.date!);
         _currentIndex = 1;
         setState(() {
           dataWeek.insert(0, lastWeek);
         });
       }
     } else {
-      _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+      _pageController.animateToPage(_currentIndex, duration: const Duration(milliseconds: 20), curve: Curves.bounceInOut);
     }
   }
 
@@ -120,13 +118,13 @@ class _HomePageState extends State<HomePage> {
     _currentIndex++;
     if (_currentIndex >= dataWeek.length - 1) {
       if (dataWeek.isNotEmpty && dataWeek.last.dayOfWeek.last.date != null) {
-        var nextWeek = await getNextWeek(dataWeek.last.dayOfWeek.last.date!);
+        var nextWeek = getNextWeek(dataWeek.last.dayOfWeek.last.date!);
         setState(() {
           dataWeek.add(nextWeek);
         });
       }
     }
-    _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 20), curve: Curves.bounceInOut);
+    _pageController.animateToPage(_currentIndex, duration: const Duration(milliseconds: 20), curve: Curves.bounceInOut);
   }
 
   String getWeekState() {
@@ -174,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                                     user: widget.newUser,
                                   )));
                     },
-                    child: Container(
+                    child: SizedBox(
                       width: 71.w,
                       height: 71.h,
                       child: Image.asset(AppAssets.avatar),
@@ -184,25 +182,23 @@ class _HomePageState extends State<HomePage> {
                     width: 35.w,
                   ),
                   Expanded(
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.newUser.name.toString(),
-                            style: TextStyle(color: Colors.white, fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.newUser.name.toString(),
+                          style: TextStyle(color: Colors.white, fontFamily: FontFamily.bai_jamjuree, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Position: ${widget.newUser.position}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: FontFamily.bai_jamjuree,
+                            fontSize: 14.sp,
                           ),
-                          Text(
-                            'Position: ${widget.newUser.position}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: FontFamily.bai_jamjuree,
-                              fontSize: 14.sp,
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   )
                 ],
@@ -259,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
+                              SizedBox(
                                   width: 32.w,
                                   height: 32.h,
                                   child: Image.asset(
@@ -296,11 +292,11 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.all(Radius.circular(12.r)),
-                              boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
+                              boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
+                              SizedBox(
                                   width: 32.w,
                                   height: 32.h,
                                   child: Image.asset(
@@ -337,11 +333,11 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                               color: Colors.grey[300],
                               borderRadius: BorderRadius.all(Radius.circular(12.r)),
-                              boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
+                              boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(1, 3), blurRadius: 2.6)]),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
+                              SizedBox(
                                   width: 32.w,
                                   height: 32.h,
                                   child: Image.asset(
@@ -371,7 +367,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: EdgeInsets.only(top: 32.h),
-            child: Container(
+            child: SizedBox(
               width: 358.w,
               height: 384.h,
               child: Column(
@@ -386,13 +382,13 @@ class _HomePageState extends State<HomePage> {
                       )
                     ],
                   )),
-                  Container(
+                  SizedBox(
                     width: 358.w,
                     height: 352.h,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
+                        SizedBox(
                           width: 358.w,
                           height: 75.h,
                           child: Column(
@@ -401,7 +397,7 @@ class _HomePageState extends State<HomePage> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: Container(
+                                    child: SizedBox(
                                       width: 358.w,
                                       height: 32.h,
                                       child: Padding(
@@ -409,7 +405,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: 24.w,
                                               height: 24.h,
                                               child: InkWell(
@@ -429,7 +425,7 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   )),
                                             ),
-                                            Container(
+                                            SizedBox(
                                               width: 24.w,
                                               height: 24.h,
                                               child: InkWell(
@@ -505,80 +501,78 @@ class _HomePageState extends State<HomePage> {
                               },
                               itemCount: dataWeek.length,
                               itemBuilder: (context, i) {
-                                return Container(
-                                  child: ListView.separated(
-                                      padding: EdgeInsets.only(top: 0.h),
-                                      itemCount: dataWeek[i].dayOfWeek.length,
-                                      separatorBuilder: (context, index) => SizedBox(
-                                            height: 8.h,
-                                          ),
-                                      itemBuilder: (context, index) {
-                                        var shortCut = dataWeek[i].dayOfWeek[index];
+                                return ListView.separated(
+                                    padding: EdgeInsets.only(top: 0.h),
+                                    itemCount: dataWeek[i].dayOfWeek.length,
+                                    separatorBuilder: (context, index) => SizedBox(
+                                          height: 8.h,
+                                        ),
+                                    itemBuilder: (context, index) {
+                                      var shortCut = dataWeek[i].dayOfWeek[index];
 
-                                        return Container(
-                                            width: 358.w,
-                                            height: 31.h,
-                                            decoration: BoxDecoration(
-                                                color: !shortCut.isWeekend() ? Colors.white : AppColors.visible,
-                                                borderRadius: BorderRadius.all(Radius.circular(8))),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
+                                      return Container(
+                                          width: 358.w,
+                                          height: 31.h,
+                                          decoration: BoxDecoration(
+                                              color: !shortCut.isWeekend() ? Colors.white : AppColors.visible,
+                                              borderRadius: const BorderRadius.all(Radius.circular(8))),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Center(
+                                                    child: Text(
+                                                  shortCut.getDateString(),
+                                                  style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
+                                                )),
+                                              ),
+                                              Expanded(
+                                                child: SizedBox(
+                                                  height: 34.h,
+                                                  width: 83.w,
+                                                  child: Visibility(
+                                                    visible: shortCut.checkin != null,
+                                                    child: Center(
+                                                      child: Text(shortCut.checkinTimeString(),
+                                                          style: TextStyle(
+                                                              fontFamily: FontFamily.bai_jamjuree,
+                                                              fontSize: 14.sp,
+                                                              color: shortCut.checkWrongTimeCheckIn() ? AppColors.text : Colors.red)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: SizedBox(
+                                                  height: 34.h,
+                                                  width: 83.w,
+                                                  child: Visibility(
+                                                    visible: shortCut.checkout != null,
+                                                    child: Center(
+                                                      child: Text(shortCut.checkoutTimeString(),
+                                                          style: TextStyle(
+                                                              fontFamily: FontFamily.bai_jamjuree,
+                                                              fontSize: 14.sp,
+                                                              color: shortCut.checkWrongTimeCheckOut() ? AppColors.text : Colors.red)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Visibility(
+                                                  visible: shortCut.showWorkTime(),
                                                   child: Center(
                                                       child: Text(
-                                                    shortCut.getDateString(),
-                                                    style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
+                                                    '${shortCut.resultWorkTime()} h',
+                                                    style: TextStyle(
+                                                        fontFamily: FontFamily.bai_jamjuree,
+                                                        fontSize: 14.sp,
+                                                        color: shortCut.checkWrongTimeWorkTime() ? AppColors.text : Colors.red),
                                                   )),
                                                 ),
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 34.h,
-                                                    width: 83.w,
-                                                    child: Visibility(
-                                                      visible: shortCut.checkin != null,
-                                                      child: Center(
-                                                        child: Text(shortCut.checkinTimeString(),
-                                                            style: TextStyle(
-                                                                fontFamily: FontFamily.bai_jamjuree,
-                                                                fontSize: 14.sp,
-                                                                color: shortCut.checkWrongTimeCheckIn() ? AppColors.text : Colors.red)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 34.h,
-                                                    width: 83.w,
-                                                    child: Visibility(
-                                                      visible: shortCut.checkout != null,
-                                                      child: Center(
-                                                        child: Text(shortCut.checkoutTimeString(),
-                                                            style: TextStyle(
-                                                                fontFamily: FontFamily.bai_jamjuree,
-                                                                fontSize: 14.sp,
-                                                                color: shortCut.checkWrongTimeCheckOut() ? AppColors.text : Colors.red)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Visibility(
-                                                    visible: shortCut.showWorkTime(),
-                                                    child: Center(
-                                                        child: Text(
-                                                      '${shortCut.resultWorkTime()} h',
-                                                      style: TextStyle(
-                                                          fontFamily: FontFamily.bai_jamjuree,
-                                                          fontSize: 14.sp,
-                                                          color: shortCut.checkWrongTimeWorkTime() ? AppColors.text : Colors.red),
-                                                    )),
-                                                  ),
-                                                ),
-                                              ],
-                                            ));
-                                      }),
-                                );
+                                              ),
+                                            ],
+                                          ));
+                                    });
                               }),
                         )
                       ],

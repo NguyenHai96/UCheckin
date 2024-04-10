@@ -45,7 +45,7 @@ class DayOff {
       DateTime? fromDate = offFrom;
       DateTime? toDate = offTo;
       int annual = 0;
-      while (toDate!.difference(fromDate!).inDays > 0) {
+      while (toDate!.difference(fromDate!).inDays >= 0) {
         fromDate = fromDate.add(const Duration(days: 1));
         if (fromDate.weekday != DateTime.saturday && fromDate.weekday != DateTime.sunday) {
           annual++;
