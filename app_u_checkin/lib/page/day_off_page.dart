@@ -90,15 +90,10 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => HomePage(
-                                    newUser: widget.user,
-                                  )));
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
                     },
                     child: SizedBox(
-                      width: 71.w,
+                      width: 71.h,
                       height: 71.h,
                       child: Image.asset(AppAssets.avatar),
                     ),
@@ -168,7 +163,7 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
             padding: EdgeInsets.only(top: 24.h),
             child: SizedBox(
               width: 358.w,
-              height: 584.h,
+              height: 565.h,
               child: Column(
                 children: [
                   Expanded(
@@ -183,7 +178,7 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                   )),
                   SizedBox(
                     width: 358.w,
-                    height: 552.h,
+                    height: 533.h,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

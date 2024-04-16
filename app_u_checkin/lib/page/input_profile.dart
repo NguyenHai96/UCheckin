@@ -349,12 +349,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         });
                         final newUserJson = jsonEncode(widget.newUser.toJson());
                         await NPreferences().saveData(widget.newUser.email.toString(), newUserJson);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => HomePage(
-                                      newUser: widget.newUser,
-                                    )));
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
                       },
                       child: Container(
                         alignment: Alignment.center,

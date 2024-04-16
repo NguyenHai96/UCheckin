@@ -41,7 +41,10 @@ class NPreferences {
     // Get SharedPreferences ref
     final SharedPreferences ref = await preferences;
     // Get data by key with cast to output data type
-    return ref.get(key) as T;
+    if (ref != null) {
+      return ref.get(key) as T;
+    }
+    return null as T;
   }
 
   Future<List<String>> getDataString<T>(String key) async {

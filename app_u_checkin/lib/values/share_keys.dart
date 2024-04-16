@@ -1,6 +1,7 @@
 class ShareKeys {
-  static final checkTime = 'checktime';
-  static final timeWorking = 'timeWorking';
-  static final listUser = 'listUser';
-  static final dayOff = 'dayOff';
+  static const checkTime = 'checktime';
+  static const timeWorking = 'timeWorking';
+  static const listUser = 'listUser';
+  static const dayOff = 'dayOff';
+  static const checkLogin = 'checkLogin';
 }

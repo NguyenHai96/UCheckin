@@ -124,6 +124,10 @@ class WorkingDay {
       int result = 0;
       if (checkin!.hour > 7 && checkin!.hour < 13 && checkout!.hour > 12) {
         result = checkout!.difference(checkin!).inMinutes - 60;
+        if (checkout!.hour > 17 && checkout!.minute > 30) {
+          DateTime setCheckOut = checkout!.copyWith(hour: 17, minute: 30);
+          result = setCheckOut.difference(checkin!).inMinutes - 60;
+        }
       } else {
         if (checkin!.hour > 7 && checkout!.hour < 12) {
           result = checkout!.difference(checkin!).inMinutes;
