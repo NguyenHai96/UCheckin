@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
-import 'package:app_u_checkin/page/input_profile.dart';
+import 'package:app_u_checkin/pages/input_profile.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/values/share_keys.dart';
 import 'package:flutter/material.dart';
@@ -31,15 +31,6 @@ class SignUpProvider extends ChangeNotifier {
     }
     return false;
   }
-
-  // @override
-  // void dispose() {
-  //   emailController.dispose();
-  //   passwordController.dispose();
-  //   rePasswordController.dispose();
-  //   // TODO: implement dispose
-  //   super.dispose();
-  // }
 
   void printEmail() {
     emailController.addListener(() {

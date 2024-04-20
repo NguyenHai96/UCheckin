@@ -9,12 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
-import 'package:app_u_checkin/page/check_in_page.dart';
-import 'package:app_u_checkin/page/home_page.dart';
-import 'package:app_u_checkin/page/input_profile.dart';
-import 'package:app_u_checkin/page/login_page.dart';
-import 'package:app_u_checkin/page/profile_page.dart';
-import 'package:app_u_checkin/page/sign_up_page.dart';
+import 'package:app_u_checkin/pages/check_in_page.dart';
+import 'package:app_u_checkin/pages/home_page.dart';
+import 'package:app_u_checkin/pages/input_profile.dart';
+import 'package:app_u_checkin/pages/login_page.dart';
+import 'package:app_u_checkin/pages/profile_page.dart';
+import 'package:app_u_checkin/pages/sign_up_page.dart';
 import 'package:app_u_checkin/providers/checkin_page_provider.dart';
 import 'package:app_u_checkin/providers/dayoff_provider.dart';
 import 'package:app_u_checkin/providers/homepage_provider.dart';
@@ -53,10 +53,10 @@ class MyApp extends StatelessWidget {
   User tempUser;
 
   MyApp({
-    Key? key,
+    super.key,
     required this.checkLogin,
     required this.tempUser,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -3,10 +3,8 @@
 import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
-import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_month.dart';
-import 'package:app_u_checkin/providers/homepage_provider.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,10 +19,8 @@ class CheckInPageProvider extends ChangeNotifier {
   getDateTimeWork(BuildContext context) async {
     DateTime now = DateTime.now();
 
-    List<WorkingDay> newWorkingObj = (await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork.toString()));
-
+    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork.toString());
     List<WorkingMonth> newList = [];
-
     newList.add(getNowMonth(now));
     newList.add(getNextMonth(now));
     newList.insert(0, getLastMonth(now));
@@ -39,7 +35,6 @@ class CheckInPageProvider extends ChangeNotifier {
         }
       }
     }
-
     dataMonth.addAll(newList);
     notifyListeners();
   }
@@ -128,7 +123,7 @@ class CheckInPageProvider extends ChangeNotifier {
   }
 
   saveDataInLocal(WorkingDay value, BuildContext context) async {
-    listWorkingDay = (await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork.toString()));
+    listWorkingDay = await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork.toString());
     listWorkingDay.add(value);
     List<String> newWokingDayJson = listWorkingDay.map((e) => jsonEncode(e.toJson())).toList();
     await NPreferences().saveData(context.read<OutThemeProvider>().user.dayWork.toString(), newWokingDayJson);

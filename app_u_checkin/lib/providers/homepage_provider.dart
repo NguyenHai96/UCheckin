@@ -14,7 +14,8 @@ class HomePageProvider extends ChangeNotifier {
     DateTime now = DateTime.now();
 
     List<WorkingDay> newWorkingObj = (await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork ?? '')) ?? [];
-
+    print('nguyenhai');
+    print(context.read<OutThemeProvider>().user.dayWork);
     for (int i = 0; i < newWorkingObj.length; i++) {}
     var startDate = now.subtract(Duration(days: now.weekday - 1));
     var endDate = now.add(Duration(days: 7 - now.weekday));
@@ -29,6 +30,8 @@ class HomePageProvider extends ChangeNotifier {
           if (DateUtils.isSameDay(newList[i].dayOfWeek[j].date, newWorkingObj[l].date)) {
             newList[i].dayOfWeek[j].checkin = newWorkingObj[l].checkin;
             newList[i].dayOfWeek[j].checkout = newWorkingObj[l].checkout;
+            print('newWorkingObj[l].checkin ---->>>> ${newWorkingObj[l].checkin}');
+            print('newList[i].dayOfWeek[j].checkin  ---->>>> ${newList[i].dayOfWeek[j].checkin}');
           }
         }
       }

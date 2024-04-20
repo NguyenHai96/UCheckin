@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/dayoff.dart';
-import 'package:app_u_checkin/page/day_off_page.dart';
+import 'package:app_u_checkin/pages/day_off_page.dart';
 import 'package:app_u_checkin/providers/homepage_provider.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:flutter/material.dart';

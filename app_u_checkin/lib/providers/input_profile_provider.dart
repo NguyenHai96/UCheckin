@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
-import 'package:app_u_checkin/page/home_page.dart';
+import 'package:app_u_checkin/pages/home_page.dart';
 import 'package:app_u_checkin/providers/homepage_provider.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/providers/sign_up_provider.dart';

@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
-import 'package:app_u_checkin/page/home_page.dart';
+import 'package:app_u_checkin/pages/home_page.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/values/share_keys.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,6 +45,7 @@ class LoginPageProvider extends ChangeNotifier {
           tempUser = User.formJson(valueMap);
           if (tempUser.password == passwordController.text) {
             context.read<OutThemeProvider>().user = tempUser;
+            print(context.read<OutThemeProvider>().user.dayWork);
             await NPreferences().saveData(ShareKeys.checkLogin, emailController.text);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => const HomePage()));
           }
