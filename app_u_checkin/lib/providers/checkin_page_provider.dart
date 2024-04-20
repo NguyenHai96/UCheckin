@@ -1,28 +1,26 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
-import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_month.dart';
+import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CheckInPageProvider extends ChangeNotifier {
-  User user = User();
-  CheckInPageProvider({required this.user});
-
   List<WorkingMonth> dataMonth = [];
   int currentIndex = 1;
   DateTime systemTime() => DateTime.now();
   List<WorkingDay> listWorkingDay = [];
   WorkingDay? valuePop;
 
-  getDateTimeWork() async {
+  getDateTimeWork(BuildContext context) async {
     DateTime now = DateTime.now();
 
-    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(user.dayWork.toString());
-
+    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork.toString());
     List<WorkingMonth> newList = [];
-
     newList.add(getNowMonth(now));
     newList.add(getNextMonth(now));
     newList.insert(0, getLastMonth(now));
@@ -37,7 +35,6 @@ class CheckInPageProvider extends ChangeNotifier {
         }
       }
     }
-
     dataMonth.addAll(newList);
     notifyListeners();
   }
@@ -125,11 +122,11 @@ class CheckInPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  saveDataInLocal(WorkingDay value) async {
-    listWorkingDay = await NPreferences().getListDataWorkingDay(user.dayWork.toString());
+  saveDataInLocal(WorkingDay value, BuildContext context) async {
+    listWorkingDay = await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork.toString());
     listWorkingDay.add(value);
     List<String> newWokingDayJson = listWorkingDay.map((e) => jsonEncode(e.toJson())).toList();
-    await NPreferences().saveData(user.dayWork.toString(), newWokingDayJson);
+    await NPreferences().saveData(context.read<OutThemeProvider>().user.dayWork.toString(), newWokingDayJson);
     notifyListeners();
   }
 }

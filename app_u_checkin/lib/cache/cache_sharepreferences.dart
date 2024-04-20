@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks, cast_from_null_always_fails
+
 library npreferences;
 
 import 'dart:convert';
@@ -41,66 +43,67 @@ class NPreferences {
     // Get SharedPreferences ref
     final SharedPreferences ref = await preferences;
     // Get data by key with cast to output data type
-    if (ref != null) {
-      return ref.get(key) as T;
-    }
-    return null as T;
+    return ref.get(key) as T;
   }
 
-  Future<List<String>> getDataString<T>(String key) async {
+  Future<List<T>> getDataString<T>(String key) async {
     // Get SharedPreferences ref
     final SharedPreferences ref = await preferences;
     List<String> items = ref.getStringList(key) ?? [];
 
     // Get data by key with cast to output data type
-    return items as List<String>;
+    return items as List<T>;
   }
 
-  Future<T> getDataWorkingDay<T>(String key) async {
+  Future<WorkingDay?> getDataWorkingDay(String key) async {
     final SharedPreferences ref = await preferences;
     final newWorkingJson = ref.getString(key);
 
     if (newWorkingJson != null) {
       final newWokingObj = WorkingDay.fromJson(jsonDecode(newWorkingJson));
-      return newWokingObj as T;
+      return newWokingObj;
     }
-    return null as T;
+    return null;
   }
 
-  Future<T> getListDataWorkingDay<T>(String key) async {
+  Future<List<WorkingDay>> getListDataWorkingDay(String key) async {
     final SharedPreferences ref = await preferences;
     List<String> newListJson = ref.getStringList(key) ?? [];
     List<WorkingDay> items = [];
-    if (newListJson != null) {
-      for (dynamic item in newListJson) {
-        items.add(WorkingDay.fromJson(jsonDecode(item)));
-      }
-      return items as T;
+    for (dynamic item in newListJson) {
+      items.add(WorkingDay.fromJson(jsonDecode(item)));
     }
-    return null as T;
+    return items;
   }
 
-  Future<T> getListDataDayOff<T>(String key) async {
+  // Future<List<T>> getListDataDayOff<T>(String key) async {
+  //   final SharedPreferences ref = await preferences;
+  //   List<String?> newListJson = ref.getStringList(key) ?? [];
+  //   List<DayOff> items = [];
+  //   for (dynamic item in newListJson) {
+  //     items.add(DayOff.fromJson(jsonDecode(item)));
+  //   }
+  //   return items as List<T>;
+  // }
+
+  Future<List<DayOff>> getListDataDayOff(String key) async {
     final SharedPreferences ref = await preferences;
     List<String> newListJson = ref.getStringList(key) ?? [];
     List<DayOff> items = [];
-    if (newListJson != null) {
-      for (dynamic item in newListJson) {
-        items.add(DayOff.fromJson(jsonDecode(item)));
-      }
-      return items as T;
+    for (dynamic item in newListJson) {
+      items.add(DayOff.fromJson(jsonDecode(item)));
     }
-    return null as T;
+    return items;
   }
 
-  Future<T> getUser<T>(String key) async {
+  Future<User?> getUser(String key) async {
     final SharedPreferences ref = await preferences;
     final userJson = ref.getString(key);
     if (userJson != null) {
       final userObj = User.formJson(jsonDecode(userJson));
-      return userObj as T;
+      return userObj;
     }
-    return null as T;
+    return null;
   }
 
   // Clear all

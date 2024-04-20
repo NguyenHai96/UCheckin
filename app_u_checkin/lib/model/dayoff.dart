@@ -1,4 +1,4 @@
-import 'package:app_u_checkin/page/make_day_off.dart';
+import 'package:app_u_checkin/pages/make_day_off.dart';
 import 'package:intl/intl.dart';
 
 class DayOff {

@@ -6,6 +6,7 @@ import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_year.dart';
 import 'package:app_u_checkin/providers/homepage_provider.dart';
+import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +30,8 @@ class ProfilePageProvider extends ChangeNotifier {
   double enoughWorkTime = 0;
 
   getNumberDayOffAnnual(BuildContext context) async {
-    final tempUser = context.read<HomePageProvider>().user;
-    List<DayOff> listDayOff = await NPreferences().getListDataDayOff(tempUser.dayOff.toString());
+    // final tempUser = context.read<OutThemeProvider>().user;
+    List<DayOff> listDayOff = await NPreferences().getListDataDayOff(context.read<OutThemeProvider>().user.dayOff ?? '') ?? [];
     int restDayOff = 12;
     for (int i = 0; i < listDayOff.length; i++) {
       restDayOff = restDayOff - (listDayOff[i].getAnnualLeaveNumber());
@@ -48,9 +49,9 @@ class ProfilePageProvider extends ChangeNotifier {
   }
 
   getRateTimeFromUser(BuildContext context) async {
-    final tempUser = context.read<HomePageProvider>().user;
+    // final tempUser = context.read<OutThemeProvider>().user;
     int checkInOnTime = 0;
-    listWorkDay = await NPreferences().getListDataWorkingDay(tempUser.dayWork.toString());
+    List<WorkingDay> listWorkDay = (await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork ?? ''));
     for (int i = 0; i < listWorkDay.length; i++) {
       if (listWorkDay[i].checkWrongTimeCheckIn() == true) {
         print('listWorkDay[i].checkin ------>>> ${listWorkDay[i].checkin}');
@@ -63,9 +64,9 @@ class ProfilePageProvider extends ChangeNotifier {
   }
 
   getWorkTime(BuildContext context) async {
-    final tempUser = context.read<HomePageProvider>().user;
+    final tempUser = context.read<OutThemeProvider>().user;
     int checkWorkTime = 0;
-    listWorkDay = await NPreferences().getListDataWorkingDay(tempUser.dayWork.toString());
+    listWorkDay = (await NPreferences().getListDataWorkingDay(tempUser.dayWork.toString())).cast<WorkingDay>();
     for (int i = 0; i < listWorkDay.length; i++) {
       if (listWorkDay[i].checkEnoughWorkTime() == true) {
         checkWorkTime++;
@@ -101,34 +102,27 @@ class ProfilePageProvider extends ChangeNotifier {
 
   saveChangeInfoProfile(BuildContext context) {
     // User tempUser = NPreferences().getUser(context.read<HomePageProvider>().user.email.toString()) as User;
-    if (nameController.text != context.read<HomePageProvider>().user.name && nameController.text != '') {
-      context.read<HomePageProvider>().user.name = nameController.text;
+    if (nameController.text != context.read<OutThemeProvider>().user.name && nameController.text != '') {
+      context.read<OutThemeProvider>().user.name = nameController.text;
     }
+
+    if (context.read<OutThemeProvider>().user.nameEnglish != englishNameController.text && englishNameController.text != '') {
+      context.read<OutThemeProvider>().user.nameEnglish = englishNameController.text;
+    }
+    if (context.read<OutThemeProvider>().user.dOB != date.text && date.text != '') {
+      context.read<OutThemeProvider>().user.dOB = date.text;
+    }
+    if (context.read<OutThemeProvider>().user.position != positionController.text && positionController.text != '') {
+      context.read<OutThemeProvider>().user.position = positionController.text;
+    }
+    if (context.read<OutThemeProvider>().user.team != dropdownValue && dropdownValue != '') {
+      context.read<OutThemeProvider>().user.team = dropdownValue;
+    }
+
+    valuePop = context.read<OutThemeProvider>().user;
+    final newUserJson = jsonEncode(context.read<OutThemeProvider>().user.toJson());
+
+    NPreferences().saveData(context.read<OutThemeProvider>().user.email ?? '', newUserJson);
     notifyListeners();
-    // if (tempUser.nameEnglish != englishNameController.text && englishNameController.text != '') {
-    //   tempUser.nameEnglish = englishNameController.text;
-    //   print("englishNameController.text ---->>> ${englishNameController.text}");
-    //   print("tempUser.nameEnglish.text ---->>> ${tempUser.nameEnglish}");
-    // }
-    // if (tempUser.dOB != date.text && date.text != '') {
-    //   tempUser.dOB = date.text;
-    // }
-    // if (tempUser.position != positionController.text && positionController.text != '') {
-    //   tempUser.position = positionController.text;
-    //   print("positionController.text ---->>> ${positionController.text}");
-    //   print("tempUser.position.text ---->>> ${tempUser.position}");
-    //   print("context.read<HomePageProvider>().user.email.toString().text ---->>> ${context.read<HomePageProvider>().user.email.toString()}");
-    // }
-    // if (tempUser.team != dropdownValue && dropdownValue != '') {
-    //   tempUser.team = dropdownValue;
-    //   print("tempUser.team.text ---->>> ${tempUser.team}");
-    // }
-
-    // valuePop = tempUser;
-    final newUserJson = jsonEncode(context.read<HomePageProvider>().user.toJson());
-
-    NPreferences().saveData(context.read<HomePageProvider>().user.email ?? '', newUserJson);
-    // NPreferences().saveData('user', newUserJson);
-    // notifyListeners();
   }
 }

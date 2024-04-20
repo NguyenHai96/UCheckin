@@ -1,23 +1,21 @@
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
-import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_week.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePageProvider extends ChangeNotifier {
-  User user = User();
-  HomePageProvider({required this.user});
-
   List<WorkingWeek> dataWeek = [];
-  // int currentIndex = 1;
+  int currentIndex = 1;
   DateTime systemTime() => DateTime.now();
 
-  getDateTimeWork() async {
+  getDateTimeWork(BuildContext context) async {
     DateTime now = DateTime.now();
 
-    List<WorkingDay> newWorkingObj = await NPreferences().getListDataWorkingDay(user.dayWork.toString());
-
+    List<WorkingDay> newWorkingObj = (await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork ?? '')) ?? [];
+    print('nguyenhai');
+    print(context.read<OutThemeProvider>().user.dayWork);
     for (int i = 0; i < newWorkingObj.length; i++) {}
     var startDate = now.subtract(Duration(days: now.weekday - 1));
     var endDate = now.add(Duration(days: 7 - now.weekday));
@@ -32,6 +30,8 @@ class HomePageProvider extends ChangeNotifier {
           if (DateUtils.isSameDay(newList[i].dayOfWeek[j].date, newWorkingObj[l].date)) {
             newList[i].dayOfWeek[j].checkin = newWorkingObj[l].checkin;
             newList[i].dayOfWeek[j].checkout = newWorkingObj[l].checkout;
+            print('newWorkingObj[l].checkin ---->>>> ${newWorkingObj[l].checkin}');
+            print('newList[i].dayOfWeek[j].checkin  ---->>>> ${newList[i].dayOfWeek[j].checkin}');
           }
         }
       }
@@ -103,10 +103,4 @@ class HomePageProvider extends ChangeNotifier {
   //   }
   //   notifyListeners();
   // }
-
-  String text = 'Hello';
-  void doSomething() {
-    text = "World";
-    notifyListeners();
-  }
 }
