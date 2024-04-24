@@ -3,18 +3,13 @@
 import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
-import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/pages/home_page.dart';
-import 'package:app_u_checkin/providers/homepage_provider.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
-import 'package:app_u_checkin/providers/sign_up_provider.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class InputProfileProvider extends ChangeNotifier {
-  InputProfileProvider();
-
   final TextEditingController date = TextEditingController();
   List<String> list = <String>['BA / QC', 'UI UX Designer', 'Web Developer', 'Mobile Developer', 'HR', 'General manager', 'Other'];
   String dropdownValue = '';
@@ -46,7 +41,6 @@ class InputProfileProvider extends ChangeNotifier {
   }
 
   saveDataAndNavigator(BuildContext context) async {
-    // final user = context.read<OutThemeProvider>().user;
     context.read<OutThemeProvider>().user.name = nameController.text;
     context.read<OutThemeProvider>().user.nameEnglish = englishNameController.text;
     context.read<OutThemeProvider>().user.dOB = date.text;
@@ -56,5 +50,6 @@ class InputProfileProvider extends ChangeNotifier {
     final newUserJson = jsonEncode(context.read<OutThemeProvider>().user.toJson());
     await NPreferences().saveData(context.read<OutThemeProvider>().user.email.toString(), newUserJson);
     Navigator.push(context, MaterialPageRoute(builder: (_) => const HomePage()));
+    notifyListeners();
   }
 }

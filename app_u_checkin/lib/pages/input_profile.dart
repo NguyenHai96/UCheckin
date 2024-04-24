@@ -3,11 +3,12 @@
 import 'package:app_u_checkin/providers/input_profile_provider.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
+import 'package:app_u_checkin/widgets/app_calendar.dart';
+import 'package:app_u_checkin/widgets/app_inputprofile_inputtext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -73,67 +74,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               SizedBox(
                                 height: 12.h,
                               ),
-                              Text(
-                                'Name',
-                                style: TextStyle(
-                                    fontFamily: FontFamily.bai_jamjuree, fontSize: 13.sp, color: AppColors.main, fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 4.h),
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
-                                  height: 48.h,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
-                                  child: TextFormField(
-                                    controller: inputInfo.nameController,
-                                    onChanged: (text) {},
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Enter',
-                                      suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                                      fillColor: AppColors.text,
-                                    ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter your password';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ),
+                              AppBoxInputProfileInputText(controller: inputInfo.nameController, label: 'Name'),
                               SizedBox(
                                 height: 14.h,
                               ),
-                              Text(
-                                'English Name',
-                                style: TextStyle(
-                                    fontFamily: FontFamily.bai_jamjuree, fontSize: 13.sp, color: AppColors.main, fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 4.h),
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
-                                  height: 48.h,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
-                                  child: TextFormField(
-                                    controller: inputInfo.englishNameController,
-                                    onChanged: (text) {},
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Enter',
-                                      suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                                      fillColor: AppColors.text,
-                                    ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter your password';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ),
+                              AppBoxInputProfileInputText(controller: inputInfo.englishNameController, label: 'English Name'),
                               SizedBox(
                                 height: 15.h,
                               ),
@@ -144,108 +89,24 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 4.h),
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
-                                  height: 48.h,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
-                                  child: TextFormField(
-                                    controller: inputInfo.date,
-                                    decoration: InputDecoration(
-                                      hintText: 'Select date',
-                                      suffixIcon: const Icon(
-                                        Icons.calendar_month_rounded,
-                                      ),
-                                      suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                                      border: InputBorder.none,
-                                    ),
-                                    onTap: () async {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Container(
-                                              height: 410.h,
-                                              color: Colors.white,
-                                              child: Column(
-                                                children: [
-                                                  TableCalendar(
-                                                    firstDay: DateTime(2000),
-                                                    lastDay: DateTime(2050),
-                                                    focusedDay: DateTime.now(),
-                                                    availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-                                                    calendarStyle: const CalendarStyle(
-                                                        selectedDecoration: BoxDecoration(
-                                                          color: Colors.blue,
-                                                        ),
-                                                        todayDecoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                                                        todayTextStyle: TextStyle(color: Colors.blue, fontSize: 16)),
-                                                    selectedDayPredicate: (date) {
-                                                      return isSameDay(inputInfo.selectedDate, date);
-                                                    },
-                                                    onDaySelected: (date, focusedDay) {
-                                                      setState(() {
-                                                        inputInfo.selectedDate = date;
-                                                        inputInfo.date.text = DateFormat('dd/MM/yyyy').format(inputInfo.selectedDate!);
-                                                      });
-                                                      Navigator.pop(context);
-                                                    },
-                                                    calendarBuilders: CalendarBuilders(
-                                                      headerTitleBuilder: (context, date) => Center(
-                                                        child: Text(
-                                                          DateFormat('MMM yyyy').format(date),
-                                                          style: TextStyle(
-                                                              fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, fontWeight: FontWeight.bold),
-                                                        ),
-                                                      ),
-                                                      selectedBuilder: (context, date, _) => Center(
-                                                        child: Text(
-                                                          date.day.toString(),
-                                                          style: TextStyle(color: Colors.blue, fontSize: 15.sp),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            );
-                                          });
-                                    },
-                                  ),
+                                child: CalendarBottom(
+                                  controller: inputInfo.date,
+                                  selectedDate: inputInfo.selectedDate,
+                                  hintText: 'dd/MM/yyyy',
+                                  onDaySelected: (date, focusedDay) {
+                                    setState(() {
+                                      inputInfo.selectedDate = date;
+                                      inputInfo.date.text = DateFormat('dd/MM/yyyy').format(inputInfo.selectedDate!);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  onChanged: (String value) {},
                                 ),
                               ),
                               SizedBox(
                                 height: 15.h,
                               ),
-                              Text(
-                                'Your position',
-                                style: TextStyle(
-                                    fontFamily: FontFamily.bai_jamjuree, fontSize: 13.sp, color: AppColors.main, fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 4.h),
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
-                                  height: 48.h,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
-                                  child: TextFormField(
-                                    controller: inputInfo.positionController,
-                                    onChanged: (text) {
-                                      setState(() {});
-                                    },
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Enter',
-                                      suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                                      fillColor: AppColors.text,
-                                    ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter your password';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ),
+                              AppBoxInputProfileInputText(controller: inputInfo.positionController, label: 'Your position'),
                               SizedBox(
                                 height: 15.h,
                               ),

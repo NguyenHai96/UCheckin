@@ -1,19 +1,18 @@
-import 'dart:convert';
-
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/dayoff.dart';
-import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_year.dart';
+import 'package:app_u_checkin/providers/checkin_page_provider.dart';
+import 'package:app_u_checkin/providers/dayoff_provider.dart';
 import 'package:app_u_checkin/providers/homepage_provider.dart';
+import 'package:app_u_checkin/providers/login_provider.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePageProvider extends ChangeNotifier {
-  ProfilePageProvider();
-
   TextEditingController date = TextEditingController();
   List<String> list = <String>['BA / QC', 'UI UX Designer', 'Web Developer', 'Mobile Developer', 'HR', 'General manager', 'Other'];
   String dropdownValue = '';
@@ -49,17 +48,18 @@ class ProfilePageProvider extends ChangeNotifier {
   }
 
   getRateTimeFromUser(BuildContext context) async {
-    // final tempUser = context.read<OutThemeProvider>().user;
     int checkInOnTime = 0;
     List<WorkingDay> listWorkDay = (await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork ?? ''));
     for (int i = 0; i < listWorkDay.length; i++) {
       if (listWorkDay[i].checkWrongTimeCheckIn() == true) {
-        print('listWorkDay[i].checkin ------>>> ${listWorkDay[i].checkin}');
         checkInOnTime++;
       }
     }
-    onTimeRate = ((checkInOnTime / listWorkDay.length) * 100);
-
+    if (checkInOnTime != 0) {
+      onTimeRate = ((checkInOnTime / listWorkDay.length) * 100);
+    } else {
+      onTimeRate = 0;
+    }
     notifyListeners();
   }
 
@@ -72,7 +72,12 @@ class ProfilePageProvider extends ChangeNotifier {
         checkWorkTime++;
       }
     }
-    enoughWorkTime = ((checkWorkTime / listWorkDay.length) * 100);
+
+    if (checkWorkTime != 0) {
+      enoughWorkTime = ((checkWorkTime / listWorkDay.length) * 100);
+    } else {
+      enoughWorkTime = 0;
+    }
     notifyListeners();
   }
 
@@ -98,31 +103,45 @@ class ProfilePageProvider extends ChangeNotifier {
     }
   }
 
-  User valuePop = User();
+  // bool checkEditData() {
+  //   if (dropdownValue.isNotEmpty &&
+  //       nameController.text.isNotEmpty &&
+  //       englishNameController.text.isNotEmpty &&
+  //       positionController.text.isNotEmpty &&
+  //       date.text.isNotEmpty) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  saveChangeInfoProfile(BuildContext context) {
-    // User tempUser = NPreferences().getUser(context.read<HomePageProvider>().user.email.toString()) as User;
-    if (nameController.text != context.read<OutThemeProvider>().user.name && nameController.text != '') {
-      context.read<OutThemeProvider>().user.name = nameController.text;
+  bool isDate(String input, String format) {
+    try {
+      final DateTime d = DateFormat(format).parseStrict(input);
+      return true;
+    } catch (e) {
+      return false;
     }
+  }
 
-    if (context.read<OutThemeProvider>().user.nameEnglish != englishNameController.text && englishNameController.text != '') {
-      context.read<OutThemeProvider>().user.nameEnglish = englishNameController.text;
+  inputValueBOD(String value, BuildContext context) {
+    if (value != '' && isDate(value, "dd/MM/yyyy")) {
+      print('vao trong roi');
+      selectedDate = DateFormat("dd/MM/yyyy").parse(value);
+      date.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
     }
-    if (context.read<OutThemeProvider>().user.dOB != date.text && date.text != '') {
-      context.read<OutThemeProvider>().user.dOB = date.text;
-    }
-    if (context.read<OutThemeProvider>().user.position != positionController.text && positionController.text != '') {
-      context.read<OutThemeProvider>().user.position = positionController.text;
-    }
-    if (context.read<OutThemeProvider>().user.team != dropdownValue && dropdownValue != '') {
-      context.read<OutThemeProvider>().user.team = dropdownValue;
-    }
+    notifyListeners();
+  }
 
-    valuePop = context.read<OutThemeProvider>().user;
-    final newUserJson = jsonEncode(context.read<OutThemeProvider>().user.toJson());
-
-    NPreferences().saveData(context.read<OutThemeProvider>().user.email ?? '', newUserJson);
+  cleanData(BuildContext context) {
+    dropdownValue = '';
+    nameController = TextEditingController();
+    englishNameController = TextEditingController();
+    positionController = TextEditingController();
+    context.read<CheckInPageProvider>().cleanData();
+    context.read<HomePageProvider>().cleanData();
+    context.read<DayOffProvider>().cleanData();
+    context.read<OutThemeProvider>().resetData();
+    context.read<LoginPageProvider>().cleanData();
     notifyListeners();
   }
 }

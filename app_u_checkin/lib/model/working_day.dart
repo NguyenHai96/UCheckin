@@ -27,12 +27,12 @@ class WorkingDay {
     }
 
     DateTime? checkDate;
-    if (dateString != null && dateString != "") {
+    if (dateString != "") {
       checkDate = DateFormat("yyyy-MM-dd hh:mm").parse(dateString);
     }
 
     DateTime? checkinDate;
-    if (checkinString != null && checkinString != "") {
+    if (checkinString != "") {
       checkinDate = DateFormat("yyyy-MM-dd hh:mm").parse(checkinString);
     }
 
@@ -110,6 +110,7 @@ class WorkingDay {
   }
 
   String getTimeString(DateTime time) {
+    print("tiem ---> ${time}");
     String formattedTime = DateFormat('HH:mm').format(time);
     return formattedTime;
   }

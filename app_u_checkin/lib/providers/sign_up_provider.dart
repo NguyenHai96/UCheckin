@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
-import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/pages/input_profile.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/values/share_keys.dart';
@@ -49,8 +48,8 @@ class SignUpProvider extends ChangeNotifier {
       context.read<OutThemeProvider>().user.id = DateTime.now().microsecondsSinceEpoch;
       context.read<OutThemeProvider>().user.email = emailController.text;
       context.read<OutThemeProvider>().user.password = passwordController.text;
-      context.read<OutThemeProvider>().user.dayWork = context.read<OutThemeProvider>().user.id.toString() + 'dayWork';
-      context.read<OutThemeProvider>().user.dayOff = context.read<OutThemeProvider>().user.id.toString() + 'dayOff';
+      context.read<OutThemeProvider>().user.dayWork = '${context.read<OutThemeProvider>().user.id}dayWork';
+      context.read<OutThemeProvider>().user.dayOff = '${context.read<OutThemeProvider>().user.id}dayOff';
 
       final newUserJson = jsonEncode(context.read<OutThemeProvider>().user.toJson());
       await NPreferences().saveData(context.read<OutThemeProvider>().user.email.toString(), newUserJson);

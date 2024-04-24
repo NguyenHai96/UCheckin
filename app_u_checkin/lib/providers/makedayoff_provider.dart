@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/dayoff.dart';
-import 'package:app_u_checkin/pages/day_off_page.dart';
-import 'package:app_u_checkin/providers/homepage_provider.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -46,7 +42,6 @@ class MakeDayOffProvider extends ChangeNotifier {
       DateTime? fromDate = selectedFormDate;
       DateTime? toDate = selectedToDate;
       while (toDate!.difference(fromDate!).inDays > 0) {
-        print("fromDate.difference(fromDate).inDays ----->>>>> ${fromDate.difference(fromDate).inDays}");
         fromDate = fromDate.add(const Duration(days: 1));
         if (fromDate.weekday != DateTime.saturday && fromDate.weekday != DateTime.sunday) {
           annual++;
@@ -83,6 +78,7 @@ class MakeDayOffProvider extends ChangeNotifier {
     selectedToDate = selectedFormDate;
     getAnnualLeaveState(context);
     Navigator.pop(context);
+    notifyListeners();
   }
 
   chooseDayOffEnd(DateTime date, BuildContext context) {
@@ -90,32 +86,45 @@ class MakeDayOffProvider extends ChangeNotifier {
     dateToControler.text = DateFormat('dd/MM/yyyy').format(selectedToDate!);
     getAnnualLeaveState(context);
     Navigator.pop(context);
+    notifyListeners();
   }
 
-  saveDataAndNavigator(BuildContext context) async {
-    List<DayOff> listDayOff = await NPreferences().getListDataDayOff(context.read<OutThemeProvider>().user.dayOff.toString());
-    int numberDayOff = 0;
-    DateTime? fromDate = selectedFormDate;
-    DateTime? toDate = selectedToDate;
-    if (toDate != null && fromDate != null) {
-      while (toDate.difference(fromDate!).inDays > 0) {
-        fromDate = fromDate.add(const Duration(days: 1));
-        if (fromDate.weekday != DateTime.saturday && fromDate.weekday != DateTime.sunday) {
-          numberDayOff++;
-        }
-      }
+  bool isDate(String input, String format) {
+    try {
+      final DateTime d = DateFormat(format).parseStrict(input);
+      return true;
+    } catch (e) {
+      return false;
     }
+  }
 
-    dayoff.type = dropdownValue;
-    dayoff.offFrom = selectedFormDate;
-    dayoff.offTo = selectedToDate;
-    dayoff.description = descriptionControler.text;
-    dayoff.numberDayOff = numberDayOff;
+  inputValueFrom(String value, BuildContext context) {
+    if (value != '' && isDate(value, "dd/MM/yyyy")) {
+      print('vao trong roi');
+      selectedFormDate = DateFormat('dd/MM/yyyy').parse(value);
+      dateFromControler.text = DateFormat('dd/MM/yyyy').format(selectedFormDate!);
+      dateToControler.text = DateFormat('dd/MM/yyyy').format(selectedFormDate!);
+      selectedToDate = selectedFormDate;
+      getAnnualLeaveState(context);
+    }
+    notifyListeners();
+  }
 
-    listDayOff.add(dayoff);
-    List<String> newDayOffJson = listDayOff.map((e) => jsonEncode(e.toJson())).toList();
-    await NPreferences().saveData(context.read<OutThemeProvider>().user.dayOff.toString(), newDayOffJson);
-    Navigator.push(context, MaterialPageRoute(builder: (_) => DayOffHomePage()));
+  inputValueTo(String value, BuildContext context) {
+    if (value != '' && isDate(value, "dd/MM/yyyy")) {
+      print('vao trong roi');
+      selectedToDate = DateFormat("dd/MM/yyyy").parse(value);
+      dateToControler.text = DateFormat('dd/MM/yyyy').format(selectedToDate!);
+      getAnnualLeaveState(context);
+    }
+    notifyListeners();
+  }
+
+  cleanData() {
+    dateFromControler.text = '';
+    dateToControler.text = '';
+    descriptionControler.text = '';
+    dropdownValue = '';
     notifyListeners();
   }
 }

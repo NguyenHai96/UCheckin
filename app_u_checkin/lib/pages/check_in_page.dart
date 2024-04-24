@@ -5,11 +5,8 @@ import 'package:app_u_checkin/widgets/app_handle_title.dart';
 import 'package:app_u_checkin/widgets/app_title_colum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
 import 'package:app_u_checkin/model/working_day.dart';
-import 'package:app_u_checkin/model/working_month.dart';
-import 'package:app_u_checkin/pages/home_page.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
 import 'package:app_u_checkin/values/app_styles.dart';
@@ -164,6 +161,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                 onTap: () async {
                                                   setState(() {
                                                     shortCut.checkin = systemTime();
+                                                    print("systemTime ----> ${systemTime()}");
                                                     valuePop = shortCut;
                                                   });
                                                   checkIn.saveDataInLocal(shortCut, context);

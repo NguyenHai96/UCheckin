@@ -1,4 +1,3 @@
-import 'package:app_u_checkin/pages/make_day_off.dart';
 import 'package:intl/intl.dart';
 
 class DayOff {
@@ -7,7 +6,6 @@ class DayOff {
   DateTime? offTo;
   String? description;
   int? numberDayOff;
-  bool? _isStatus;
 
   DayOff({this.type, this.offFrom, this.offTo, this.description, this.numberDayOff});
 
@@ -26,10 +24,10 @@ class DayOff {
     }
     DateTime? checkOffFrom;
     DateTime? checkOffTo;
-    if (offFromString != null && offFromString != "" && offFromString != "null") {
+    if (offFromString != "" && offFromString != "null") {
       checkOffFrom = DateFormat("yyyy-MM-dd hh:mm").parse(offFromString);
     }
-    if (offToString != null && offToString != "" && offToString != "null") {
+    if (offToString != "" && offToString != "null") {
       checkOffTo = DateFormat("yyyy-MM-dd hh:mm").parse(offToString);
     }
 

@@ -28,7 +28,7 @@ class AppButton extends StatelessWidget {
           children: [
             SizedBox(
                 width: 32.w,
-                height: 32.h,
+                // height: 32.h,
                 child: Image.asset(
                   image,
                   fit: BoxFit.cover,

@@ -45,13 +45,21 @@ class LoginPageProvider extends ChangeNotifier {
           tempUser = User.formJson(valueMap);
           if (tempUser.password == passwordController.text) {
             context.read<OutThemeProvider>().user = tempUser;
-            print(context.read<OutThemeProvider>().user.dayWork);
+
             await NPreferences().saveData(ShareKeys.checkLogin, emailController.text);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => const HomePage()));
+          } else {
+            print('Ten dang nhap hoac mat khau khong dung! Xin moi nhap lai');
           }
         }
       }
     }
+    notifyListeners();
+  }
+
+  cleanData() {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
     notifyListeners();
   }
 }

@@ -4,17 +4,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
-import 'package:app_u_checkin/model/working_day.dart';
-import 'package:app_u_checkin/pages/check_in_page.dart';
 import 'package:app_u_checkin/pages/home_page.dart';
-import 'package:app_u_checkin/pages/input_profile.dart';
 import 'package:app_u_checkin/pages/login_page.dart';
-import 'package:app_u_checkin/pages/profile_page.dart';
-import 'package:app_u_checkin/pages/sign_up_page.dart';
 import 'package:app_u_checkin/providers/checkin_page_provider.dart';
 import 'package:app_u_checkin/providers/dayoff_provider.dart';
 import 'package:app_u_checkin/providers/homepage_provider.dart';

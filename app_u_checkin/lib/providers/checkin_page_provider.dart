@@ -129,4 +129,9 @@ class CheckInPageProvider extends ChangeNotifier {
     await NPreferences().saveData(context.read<OutThemeProvider>().user.dayWork.toString(), newWokingDayJson);
     notifyListeners();
   }
+
+  cleanData() {
+    dataMonth = [];
+    notifyListeners();
+  }
 }
