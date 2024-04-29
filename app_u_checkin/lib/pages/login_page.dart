@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                                 width: 272.w,
                                 alignment: Alignment.centerLeft,
                                 padding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h),
-                                decoration: BoxDecoration(color: AppColors.login, borderRadius: BorderRadius.all(Radius.circular(10.r))),
+                                decoration: BoxDecoration(color: AppColors.blueF1FAFF, borderRadius: BorderRadius.all(Radius.circular(10.r))),
                                 child: TextFormField(
                                   controller: login.emailController,
                                   onChanged: (value) {
@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                                     border: InputBorder.none,
                                     hintText: 'Enter',
                                     suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                                    fillColor: AppColors.text,
+                                    fillColor: AppColors.grey777E90,
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                                 width: 272.w,
                                 alignment: Alignment.centerLeft,
                                 padding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h),
-                                decoration: BoxDecoration(color: AppColors.login, borderRadius: BorderRadius.all(Radius.circular(10.r))),
+                                decoration: BoxDecoration(color: AppColors.blueF1FAFF, borderRadius: BorderRadius.all(Radius.circular(10.r))),
                                 child: TextFormField(
                                   obscureText: login.isHidden,
                                   controller: login.passwordController,
@@ -142,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                                       border: InputBorder.none,
                                       hintText: 'Enter',
                                       suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                                      fillColor: AppColors.text,
+                                      fillColor: AppColors.grey777E90,
                                       suffix: InkWell(
                                         onTap: login.togglePasswordView,
                                         child: Icon(login.isHidden ? Icons.visibility : Icons.visibility_off),
@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(Radius.circular(8.r)),
-                                      color: login.isActiveSignUp ? AppColors.checkout : Colors.grey),
+                                      color: login.isActiveSignUp ? AppColors.blue00B4EA : Colors.grey),
                                   child: Text(
                                     'Log in',
                                     style: TextStyle(

@@ -44,7 +44,7 @@ class AppSignUpInputText extends StatelessWidget {
           width: 272.w,
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
-          decoration: BoxDecoration(color: AppColors.login, borderRadius: BorderRadius.all(Radius.circular(10.r))),
+          decoration: BoxDecoration(color: AppColors.blueF1FAFF, borderRadius: BorderRadius.all(Radius.circular(10.r))),
           child: TextFormField(
               obscureText: hidden,
               controller: controller,
@@ -53,7 +53,7 @@ class AppSignUpInputText extends StatelessWidget {
                   border: InputBorder.none,
                   hintText: hintText,
                   suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                  fillColor: AppColors.hintText,
+                  fillColor: AppColors.grey777E90,
                   suffix: InkWell(
                     onTap: onTap,
                     child: Icon(hidden ? Icons.visibility : Icons.visibility_off),

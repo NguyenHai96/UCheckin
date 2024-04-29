@@ -5,7 +5,10 @@ import 'dart:convert';
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/dayoff.dart';
 import 'package:app_u_checkin/model/user.dart';
+import 'package:app_u_checkin/model/working_day.dart';
+import 'package:app_u_checkin/pages/bottom_navigator_bar.dart';
 import 'package:app_u_checkin/pages/day_off_page.dart';
+import 'package:app_u_checkin/providers/bottom_navigation_provider.dart';
 import 'package:app_u_checkin/providers/dayoff_provider.dart';
 import 'package:app_u_checkin/providers/makedayoff_provider.dart';
 import 'package:app_u_checkin/providers/profile_provider.dart';
@@ -72,7 +75,16 @@ class OutThemeProvider extends ChangeNotifier {
     List<String> newDayOffJson = listDayOff.map((e) => jsonEncode(e.toJson())).toList();
     await NPreferences().saveData(user.dayOff.toString(), newDayOffJson);
     context.read<DayOffProvider>().cleanData();
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const DayOffHomePage()));
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const BottomNavigatorBar()));
+    context.read<BottomNavigationBarProvider>().setCurentIndexToDayOff();
+    notifyListeners();
+  }
+
+  saveDataInLocalCheckIn(WorkingDay value, BuildContext context) async {
+    List<WorkingDay> listWorkingDay = await NPreferences().getListDataWorkingDay(user.dayWork.toString());
+    listWorkingDay.add(value);
+    List<String> newWokingDayJson = listWorkingDay.map((e) => jsonEncode(e.toJson())).toList();
+    await NPreferences().saveData(user.dayWork.toString(), newWokingDayJson);
     notifyListeners();
   }
 

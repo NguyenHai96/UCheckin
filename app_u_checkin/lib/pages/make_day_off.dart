@@ -5,7 +5,6 @@ import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/widgets/app_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:app_u_checkin/values/app_assets.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
@@ -66,7 +65,7 @@ class _MakeDayOffState extends State<MakeDayOff> {
                         padding: EdgeInsets.only(top: 4.h),
                         child: Container(
                           // height: 48.h,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.blueF1FAFF),
                           child: DropdownButtonFormField<String>(
                             icon: const Icon(Icons.arrow_drop_down_rounded),
                             hint: const Text('Select'),
@@ -79,7 +78,7 @@ class _MakeDayOffState extends State<MakeDayOff> {
                             decoration: const InputDecoration(
                               constraints: BoxConstraints(),
                               border: InputBorder.none,
-                              fillColor: AppColors.login,
+                              fillColor: AppColors.blueF1FAFF,
                               filled: true,
                             ),
                             items: dayoff.list.map<DropdownMenuItem<String>>((String value) {
@@ -176,7 +175,7 @@ class _MakeDayOffState extends State<MakeDayOff> {
                         child: Container(
                           padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
                           height: 88.h,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.blueF1FAFF),
                           child: TextFormField(
                             controller: dayoff.descriptionControler,
                             onChanged: (value) {

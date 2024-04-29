@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unrelated_type_equality_checks
 
 import 'dart:convert';
 
@@ -31,19 +31,25 @@ class SignUpProvider extends ChangeNotifier {
     return false;
   }
 
-  void printEmail() {
-    emailController.addListener(() {
-      final String text = emailController.text;
+  Future<bool> checkUserSignUp() async {
+    List<String> listUser = await NPreferences().getDataString(ShareKeys.listUser);
+    for (int i = 0; i < listUser.length; i++) {
+      if (listUser[i] == emailController.text) {
+        return false;
+      }
+    }
+    return true;
+  }
 
-      emailController.value = emailController.value
-          .copyWith(text: text, selection: TextSelection(baseOffset: text.length, extentOffset: text.length), composing: TextRange.empty);
-    });
-    notifyListeners();
+  bool isActiveButtom() {
+    if (checkSignUp() == true && checkUserSignUp() == true) {
+      return true;
+    }
+    return false;
   }
 
   saveDataAndNavigator(BuildContext context) async {
     List<String> listKey = (await NPreferences().getDataString(ShareKeys.listUser));
-    // var user = context.read<OutThemeProvider>().user;
     if (rePasswordController.text == passwordController.text) {
       context.read<OutThemeProvider>().user.id = DateTime.now().microsecondsSinceEpoch;
       context.read<OutThemeProvider>().user.email = emailController.text;

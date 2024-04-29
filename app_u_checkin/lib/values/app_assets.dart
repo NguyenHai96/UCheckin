@@ -17,4 +17,10 @@ class AppAssets {
   static final String time = imagePath + 'icon_time.png';
   static final String work = imagePath + 'icon_work.png';
   static final String addCircle = imagePath + 'add-circle.png';
+  static final String homeIcon = imagePath + 'home.png';
+  static final String coffeeIcon = imagePath + 'coffee.png';
+  static final String personIcon = imagePath + 'person.png';
+  static final String chosecoffeeIcon = imagePath + 'choseCoffee.png';
+  static final String choseHomeIcon = imagePath + 'choseHome.png';
+  static final String choseProfileIcon = imagePath + 'choseProfile.png';
 }

@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Consumer(
       builder: (BuildContext context, InputProfileProvider inputInfo, _) {
         return Scaffold(
-          backgroundColor: AppColors.login,
+          backgroundColor: AppColors.blueF1FAFF,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 43.w),
             child: Column(
@@ -69,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   alignment: Alignment.center,
                                   child: Text(
                                     'You need to input information to coutinue',
-                                    style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 13.sp, color: AppColors.textBasic),
+                                    style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 13.sp, color: AppColors.grey5E5F60),
                                   )),
                               SizedBox(
                                 height: 12.h,
@@ -120,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: Container(
                                   // height: 48.h,
                                   width: 272.w,
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.blueF1FAFF),
                                   child: DropdownButtonFormField<String>(
                                     icon: const Icon(Icons.arrow_drop_down_rounded),
                                     hint: const Text('Select'),
