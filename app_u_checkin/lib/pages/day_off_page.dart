@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, use_build_context_synchronously
-import 'package:app_u_checkin/pages/home_page.dart';
 import 'package:app_u_checkin/pages/make_day_off.dart';
+import 'package:app_u_checkin/providers/bottom_navigation_provider.dart';
 import 'package:app_u_checkin/providers/dayoff_provider.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/widgets/app_box_title_info.dart';
@@ -82,13 +82,15 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
     return Consumer(
       builder: (BuildContext context, DayOffProvider infoDayOff, _) {
         return Scaffold(
-          backgroundColor: AppColors.login,
+          backgroundColor: AppColors.blueF1FAFF,
           body: SafeArea(
             child: Column(
               children: [
                 AppBoxTitleInformaition(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const HomePage()));
+                      setState(() {
+                        context.read<BottomNavigationBarProvider>().setCurentIndex();
+                      });
                     },
                     labelName: context.read<OutThemeProvider>().user.name.toString(),
                     labelPosition: 'Position: ${context.read<OutThemeProvider>().user.position}',
@@ -200,46 +202,56 @@ class _DayOffHomePageState extends State<DayOffHomePage> {
                                                       const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(8))),
                                                   child: Row(
                                                     children: [
-                                                      Expanded(
+                                                      SizedBox(
+                                                        height: 34.h,
+                                                        width: 83.w,
                                                         child: Center(
                                                             child: Text(
                                                           shortCut.dateString(),
-                                                          style:
-                                                              TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
+                                                          style: TextStyle(
+                                                              fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.grey777E90),
                                                           overflow: TextOverflow.ellipsis,
                                                         )),
                                                       ),
-                                                      Expanded(
-                                                        child: SizedBox(
-                                                          height: 34.h,
-                                                          width: 83.w,
-                                                          child: Center(
-                                                            child: Text(shortCut.type.toString(),
-                                                                style: TextStyle(
-                                                                    fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text)),
-                                                          ),
+                                                      SizedBox(
+                                                        width: 8.w,
+                                                      ),
+                                                      Container(
+                                                        alignment: Alignment.centerLeft,
+                                                        height: 34.h,
+                                                        width: 83.w,
+                                                        child: Text(shortCut.type.toString(),
+                                                            style: TextStyle(
+                                                                fontFamily: FontFamily.bai_jamjuree,
+                                                                fontSize: 14.sp,
+                                                                color: AppColors.grey777E90,
+                                                                overflow: TextOverflow.ellipsis)),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8.w,
+                                                      ),
+                                                      Container(
+                                                        height: 34.h,
+                                                        width: 83.w,
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Text(
+                                                          shortCut.description.toString(),
+                                                          style: TextStyle(
+                                                              fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.grey777E90),
+                                                          overflow: TextOverflow.ellipsis,
                                                         ),
                                                       ),
-                                                      Expanded(
-                                                        child: SizedBox(
-                                                          height: 34.h,
-                                                          width: 83.w,
-                                                          child: Center(
-                                                            child: Text(
-                                                              shortCut.description.toString(),
-                                                              style: TextStyle(
-                                                                  fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
-                                                              overflow: TextOverflow.ellipsis,
-                                                            ),
-                                                          ),
-                                                        ),
+                                                      SizedBox(
+                                                        width: 8.w,
                                                       ),
-                                                      Expanded(
+                                                      SizedBox(
+                                                        height: 34.h,
+                                                        width: 83.w,
                                                         child: Center(
                                                             child: Text(
                                                           'Submitted',
-                                                          style:
-                                                              TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
+                                                          style: TextStyle(
+                                                              fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.grey777E90),
                                                         )),
                                                       ),
                                                     ],

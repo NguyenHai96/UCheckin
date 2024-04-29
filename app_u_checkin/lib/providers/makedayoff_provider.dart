@@ -100,7 +100,6 @@ class MakeDayOffProvider extends ChangeNotifier {
 
   inputValueFrom(String value, BuildContext context) {
     if (value != '' && isDate(value, "dd/MM/yyyy")) {
-      print('vao trong roi');
       selectedFormDate = DateFormat('dd/MM/yyyy').parse(value);
       dateFromControler.text = DateFormat('dd/MM/yyyy').format(selectedFormDate!);
       dateToControler.text = DateFormat('dd/MM/yyyy').format(selectedFormDate!);
@@ -112,7 +111,6 @@ class MakeDayOffProvider extends ChangeNotifier {
 
   inputValueTo(String value, BuildContext context) {
     if (value != '' && isDate(value, "dd/MM/yyyy")) {
-      print('vao trong roi');
       selectedToDate = DateFormat("dd/MM/yyyy").parse(value);
       dateToControler.text = DateFormat('dd/MM/yyyy').format(selectedToDate!);
       getAnnualLeaveState(context);

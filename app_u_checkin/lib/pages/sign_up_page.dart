@@ -86,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 width: 272.w,
                                 alignment: Alignment.centerLeft,
                                 padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
-                                decoration: BoxDecoration(color: AppColors.login, borderRadius: BorderRadius.all(Radius.circular(10.r))),
+                                decoration: BoxDecoration(color: AppColors.blueF1FAFF, borderRadius: BorderRadius.all(Radius.circular(10.r))),
                                 child: TextFormField(
                                   controller: signUp.emailController,
                                   onChanged: (text) => {
@@ -98,7 +98,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     border: InputBorder.none,
                                     hintText: 'Enter your email',
                                     suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                                    fillColor: AppColors.hintText,
+                                    fillColor: AppColors.grey777E90,
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -118,10 +118,12 @@ class _SignUpPageState extends State<SignUpPage> {
                             hintText: 'Enter your passwoord',
                             label: 'Password',
                             hidden: signUp.isHidden,
-                            onChanged: (text) {
+                            onChanged: (text) async {
                               setState(() {
-                                signUp.isActiveSignUp = signUp.checkSignUp();
+                                signUp.isActiveSignUp = signUp.isActiveButtom();
                               });
+
+                              await signUp.checkUserSignUp() ? '' : print('Tai khoan da ton tai');
                             },
                             onTap: signUp.togglePasswordView,
                             validator: (value) {
@@ -139,10 +141,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             hintText: 'Re-Enter your passwoord',
                             label: 'Confirm Password',
                             hidden: signUp.isHidden,
-                            onChanged: (textRe) {
+                            onChanged: (textRe) async {
                               setState(() {
-                                signUp.isActiveSignUp = signUp.checkSignUp();
+                                signUp.isActiveSignUp = signUp.isActiveButtom();
                               });
+                              await signUp.checkUserSignUp() ? '' : print('Tai khoan da ton tai');
                             },
                             onTap: signUp.togglePasswordView,
                             validator: (value) {
@@ -195,7 +198,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(Radius.circular(8.r)),
-                                  color: signUp.isActiveSignUp ? AppColors.checkout : Colors.grey),
+                                  color: signUp.isActiveSignUp ? AppColors.blue00B4EA : Colors.grey),
                               child: Text(
                                 'Sign up',
                                 style: TextStyle(

@@ -2,6 +2,7 @@ import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/dayoff.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_year.dart';
+import 'package:app_u_checkin/providers/bottom_navigation_provider.dart';
 import 'package:app_u_checkin/providers/checkin_page_provider.dart';
 import 'package:app_u_checkin/providers/dayoff_provider.dart';
 import 'package:app_u_checkin/providers/homepage_provider.dart';
@@ -66,7 +67,7 @@ class ProfilePageProvider extends ChangeNotifier {
   getWorkTime(BuildContext context) async {
     final tempUser = context.read<OutThemeProvider>().user;
     int checkWorkTime = 0;
-    listWorkDay = (await NPreferences().getListDataWorkingDay(tempUser.dayWork.toString())).cast<WorkingDay>();
+    listWorkDay = await NPreferences().getListDataWorkingDay(tempUser.dayWork.toString());
     for (int i = 0; i < listWorkDay.length; i++) {
       if (listWorkDay[i].checkEnoughWorkTime() == true) {
         checkWorkTime++;
@@ -83,36 +84,25 @@ class ProfilePageProvider extends ChangeNotifier {
 
   colorDropDownValue(String value) {
     if (value == 'BA / QC') {
-      return AppColors.baQc;
+      return AppColors.yellowFAE5AF;
     } else {
       if (value == 'UI UX Designer') {
-        return AppColors.uiUx;
+        return AppColors.redOrange;
       } else if (value == 'Web Developer') {
-        return AppColors.webDev;
+        return AppColors.greenBAE8BC;
       } else if (value == 'Mobile Developer') {
-        return AppColors.mobileDev;
+        return AppColors.blueC8EDFF;
       } else if (value == 'HR') {
-        return AppColors.hr;
+        return AppColors.orange;
       } else if (value == 'General manager') {
-        return AppColors.generalManager;
+        return AppColors.magentaE9C8F5;
       } else if (value == 'Other') {
-        return AppColors.other;
+        return AppColors.blueBDD4F6;
       } else {
         return Colors.transparent;
       }
     }
   }
-
-  // bool checkEditData() {
-  //   if (dropdownValue.isNotEmpty &&
-  //       nameController.text.isNotEmpty &&
-  //       englishNameController.text.isNotEmpty &&
-  //       positionController.text.isNotEmpty &&
-  //       date.text.isNotEmpty) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   bool isDate(String input, String format) {
     try {
@@ -142,6 +132,7 @@ class ProfilePageProvider extends ChangeNotifier {
     context.read<DayOffProvider>().cleanData();
     context.read<OutThemeProvider>().resetData();
     context.read<LoginPageProvider>().cleanData();
+    context.read<BottomNavigationBarProvider>().cleanBottomNavigatorBar();
     notifyListeners();
   }
 }

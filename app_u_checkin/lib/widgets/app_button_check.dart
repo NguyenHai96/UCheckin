@@ -35,14 +35,14 @@ class _ButtonCheckState extends State<ButtonCheck> {
           visible: widget.checkVisibility,
           replacement: Center(
             child: Text(widget.checkTime,
-                style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: widget.checkColor ? AppColors.text : Colors.red)),
+                style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: widget.checkColor ? AppColors.grey777E90 : Colors.red)),
           ),
           child: Center(
             child: Container(
               alignment: Alignment.center,
               height: 22.h,
               width: 56.w,
-              decoration: BoxDecoration(color: AppColors.checkout, borderRadius: BorderRadius.all(Radius.circular(4.r))),
+              decoration: BoxDecoration(color: AppColors.blue00B4EA, borderRadius: BorderRadius.all(Radius.circular(4.r))),
               child: InkWell(
                 onTap: () async {
                   widget.onTap();

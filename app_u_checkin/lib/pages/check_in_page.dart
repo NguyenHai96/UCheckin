@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable, use_build_context_synchronously
 import 'package:app_u_checkin/providers/checkin_page_provider.dart';
+import 'package:app_u_checkin/providers/homepage_provider.dart';
+import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/widgets/app_button_check.dart';
 import 'package:app_u_checkin/widgets/app_handle_title.dart';
 import 'package:app_u_checkin/widgets/app_title_colum.dart';
@@ -79,14 +81,15 @@ class _PageCheckInState extends State<PageCheckIn> {
               style: TextStyle(fontFamily: FontFamily.beVietnamPro, fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             leading: InkWell(
-              onTap: () {
-                Navigator.pop(context, valuePop);
+              onTap: () async {
+                Navigator.pop(context);
+                await context.read<HomePageProvider>().getDateTimeWork(context);
               },
               child: Image.asset(AppAssets.leftArrow),
             ),
           ),
           body: Container(
-            color: AppColors.login,
+            color: AppColors.blueF1FAFF,
             child: Padding(
               padding: EdgeInsets.all(16.h),
               child: Column(
@@ -145,7 +148,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                                         width: 358.w,
                                         height: 34.h,
                                         decoration: BoxDecoration(
-                                            color: !shortCut.isWeekend() ? Colors.white : AppColors.visible,
+                                            color: !shortCut.isWeekend() ? Colors.white : AppColors.whiteF0F0F1,
                                             borderRadius: const BorderRadius.all(Radius.circular(8))),
                                         child: Row(
                                           children: [
@@ -153,7 +156,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                                               child: Center(
                                                   child: Text(
                                                 shortCut.getDateString(),
-                                                style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.text),
+                                                style: TextStyle(fontFamily: FontFamily.bai_jamjuree, fontSize: 14.sp, color: AppColors.grey777E90),
                                               )),
                                             ),
                                             ButtonCheck(
@@ -161,10 +164,8 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                 onTap: () async {
                                                   setState(() {
                                                     shortCut.checkin = systemTime();
-                                                    print("systemTime ----> ${systemTime()}");
-                                                    valuePop = shortCut;
                                                   });
-                                                  checkIn.saveDataInLocal(shortCut, context);
+                                                  await context.read<OutThemeProvider>().saveDataInLocalCheckIn(shortCut, context);
                                                 },
                                                 label: 'Check in',
                                                 checkColor: shortCut.checkWrongTimeCheckIn(),
@@ -180,7 +181,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                         style: TextStyle(
                                                             fontFamily: FontFamily.bai_jamjuree,
                                                             fontSize: 14.sp,
-                                                            color: shortCut.checkWrongTimeCheckOut() ? AppColors.text : Colors.red)),
+                                                            color: shortCut.checkWrongTimeCheckOut() ? AppColors.grey777E90 : Colors.red)),
                                                   ),
                                                   child: Center(
                                                     child: Container(
@@ -195,10 +196,9 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                             ? () async {
                                                                 setState(() {
                                                                   shortCut.checkout = systemTime();
-                                                                  valuePop = shortCut;
                                                                 });
 
-                                                                checkIn.saveDataInLocal(shortCut, context);
+                                                                await context.read<OutThemeProvider>().saveDataInLocalCheckIn(shortCut, context);
                                                               }
                                                             : null,
                                                         child: Text(
@@ -220,7 +220,7 @@ class _PageCheckInState extends State<PageCheckIn> {
                                                   style: TextStyle(
                                                       fontFamily: FontFamily.bai_jamjuree,
                                                       fontSize: 14.sp,
-                                                      color: shortCut.checkWrongTimeWorkTime() ? AppColors.text : Colors.red),
+                                                      color: shortCut.checkWrongTimeWorkTime() ? AppColors.grey777E90 : Colors.red),
                                                 )),
                                               ),
                                             ),

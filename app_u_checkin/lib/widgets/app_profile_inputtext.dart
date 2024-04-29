@@ -24,14 +24,14 @@ class AppProfileInputText extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
               height: 48.h,
-              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
+              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.blueF1FAFF),
               child: TextFormField(
                 controller: controller,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: hintText,
                   suffixStyle: TextStyle(fontSize: 16.sp, fontFamily: FontFamily.bai_jamjuree),
-                  fillColor: AppColors.text,
+                  fillColor: AppColors.grey777E90,
                 ),
               ),
             ),

@@ -1,6 +1,9 @@
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/working_day.dart';
 import 'package:app_u_checkin/model/working_week.dart';
+import 'package:app_u_checkin/pages/day_off_page.dart';
+import 'package:app_u_checkin/pages/home_page.dart';
+import 'package:app_u_checkin/pages/input_profile.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +17,7 @@ class HomePageProvider extends ChangeNotifier {
     dataWeek = [];
     DateTime now = DateTime.now();
 
-    List<WorkingDay> newWorkingObj = (await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork ?? '')) ?? [];
+    List<WorkingDay> newWorkingObj = (await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork ?? ''));
 
     for (int i = 0; i < newWorkingObj.length; i++) {}
     var startDate = now.subtract(Duration(days: now.weekday - 1));
@@ -96,6 +99,19 @@ class HomePageProvider extends ChangeNotifier {
 
   cleanData() {
     dataWeek = [];
+    notifyListeners();
+  }
+
+  int selectedIndex = 0;
+  List<Widget> navigator = <Widget>[const HomePage(), const DayOffHomePage(), const ProfilePage()];
+
+  void onItemTapped(int index) {
+    selectedIndex = index;
+    notifyListeners();
+  }
+
+  setIndexLogin() {
+    currentIndex = 1;
     notifyListeners();
   }
 }

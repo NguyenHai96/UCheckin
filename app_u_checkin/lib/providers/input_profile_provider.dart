@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
+import 'package:app_u_checkin/pages/bottom_navigator_bar.dart';
 import 'package:app_u_checkin/pages/home_page.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/values/app_colors.dart';
@@ -20,20 +21,20 @@ class InputProfileProvider extends ChangeNotifier {
 
   colorDropDownValue(String value) {
     if (value == 'BA / QC') {
-      return AppColors.baQc;
+      return AppColors.yellowFAE5AF;
     } else {
       if (value == 'UI UX Designer') {
-        return AppColors.uiUx;
+        return AppColors.redOrange;
       } else if (value == 'Web Developer') {
-        return AppColors.webDev;
+        return AppColors.greenBAE8BC;
       } else if (value == 'Mobile Developer') {
-        return AppColors.mobileDev;
+        return AppColors.blueC8EDFF;
       } else if (value == 'HR') {
-        return AppColors.hr;
+        return AppColors.orange;
       } else if (value == 'General manager') {
-        return AppColors.generalManager;
+        return AppColors.magentaE9C8F5;
       } else if (value == 'Other') {
-        return AppColors.other;
+        return AppColors.blueBDD4F6;
       } else {
         return Colors.transparent;
       }
@@ -49,7 +50,7 @@ class InputProfileProvider extends ChangeNotifier {
 
     final newUserJson = jsonEncode(context.read<OutThemeProvider>().user.toJson());
     await NPreferences().saveData(context.read<OutThemeProvider>().user.email.toString(), newUserJson);
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const HomePage()));
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const BottomNavigatorBar()));
     notifyListeners();
   }
 }

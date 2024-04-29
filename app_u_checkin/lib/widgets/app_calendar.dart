@@ -34,7 +34,7 @@ class _CalendarBottomState extends State<CalendarBottom> {
     return Container(
       padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
       height: 48.h,
-      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.login),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.r)), color: AppColors.blueF1FAFF),
       child: TextFormField(
         onChanged: widget.onChanged,
         controller: widget.controller,

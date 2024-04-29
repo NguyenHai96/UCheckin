@@ -13,7 +13,7 @@ class CheckInPageProvider extends ChangeNotifier {
   List<WorkingMonth> dataMonth = [];
   int currentIndex = 1;
   DateTime systemTime() => DateTime.now();
-  List<WorkingDay> listWorkingDay = [];
+  // List<WorkingDay> listWorkingDay = [];
   WorkingDay? valuePop;
 
   getDateTimeWork(BuildContext context) async {
@@ -122,13 +122,13 @@ class CheckInPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  saveDataInLocal(WorkingDay value, BuildContext context) async {
-    listWorkingDay = await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork.toString());
-    listWorkingDay.add(value);
-    List<String> newWokingDayJson = listWorkingDay.map((e) => jsonEncode(e.toJson())).toList();
-    await NPreferences().saveData(context.read<OutThemeProvider>().user.dayWork.toString(), newWokingDayJson);
-    notifyListeners();
-  }
+  // saveDataInLocal(WorkingDay value, BuildContext context) async {
+  //   listWorkingDay = await NPreferences().getListDataWorkingDay(context.read<OutThemeProvider>().user.dayWork.toString());
+  //   listWorkingDay.add(value);
+  //   List<String> newWokingDayJson = listWorkingDay.map((e) => jsonEncode(e.toJson())).toList();
+  //   await NPreferences().saveData(context.read<OutThemeProvider>().user.dayWork.toString(), newWokingDayJson);
+  //   notifyListeners();
+  // }
 
   cleanData() {
     dataMonth = [];

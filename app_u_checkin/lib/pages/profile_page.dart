@@ -46,7 +46,7 @@ class _YourProFilePageState extends State<YourProFilePage> {
             body: SafeArea(
                 child: SingleChildScrollView(
               child: Container(
-                color: AppColors.login,
+                color: AppColors.blueF1FAFF,
                 padding: EdgeInsets.all(16.h),
                 child: Column(
                   children: [
@@ -56,15 +56,9 @@ class _YourProFilePageState extends State<YourProFilePage> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: SizedBox(
-                              width: 20.h,
-                              height: 20.h,
-                              child: const Icon(Icons.arrow_back_ios_new_sharp),
-                            ),
+                          child: SizedBox(
+                            width: 20.h,
+                            height: 20.h,
                           ),
                         ),
                         Expanded(
@@ -95,7 +89,6 @@ class _YourProFilePageState extends State<YourProFilePage> {
                           child: InkWell(
                             onTap: () async {
                               String logout = '';
-
                               await NPreferences().saveData(ShareKeys.checkLogin, logout);
                               profile.cleanData(context);
                               Navigator.pushAndRemoveUntil(

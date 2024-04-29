@@ -4,10 +4,9 @@ import 'dart:convert';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
-import 'package:app_u_checkin/pages/home_page.dart';
+import 'package:app_u_checkin/pages/bottom_navigator_bar.dart';
 import 'package:app_u_checkin/providers/outthem_provider.dart';
 import 'package:app_u_checkin/values/share_keys.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +46,8 @@ class LoginPageProvider extends ChangeNotifier {
             context.read<OutThemeProvider>().user = tempUser;
 
             await NPreferences().saveData(ShareKeys.checkLogin, emailController.text);
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => const HomePage()));
+            // context.read<HomePageProvider>().setIndexLogin();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => const BottomNavigatorBar()));
           } else {
             print('Ten dang nhap hoac mat khau khong dung! Xin moi nhap lai');
           }
@@ -58,8 +58,8 @@ class LoginPageProvider extends ChangeNotifier {
   }
 
   cleanData() {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
     notifyListeners();
   }
 }

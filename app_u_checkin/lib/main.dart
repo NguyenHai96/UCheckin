@@ -1,13 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable, prefer_typing_uninitialized_variables
 import 'dart:convert';
 
+import 'package:app_u_checkin/pages/bottom_navigator_bar.dart';
+import 'package:app_u_checkin/providers/bottom_navigation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import 'package:app_u_checkin/cache/cache_sharepreferences.dart';
 import 'package:app_u_checkin/model/user.dart';
-import 'package:app_u_checkin/pages/home_page.dart';
 import 'package:app_u_checkin/pages/login_page.dart';
 import 'package:app_u_checkin/providers/checkin_page_provider.dart';
 import 'package:app_u_checkin/providers/dayoff_provider.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => OutThemeProvider(user: tempUser)),
+        ChangeNotifierProvider(create: (_) => BottomNavigationBarProvider()),
         ChangeNotifierProvider(create: (_) => HomePageProvider()),
         ChangeNotifierProvider(create: (_) => CheckInPageProvider()),
         ChangeNotifierProvider(create: (_) => ProfilePageProvider()),
@@ -77,7 +79,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: checkLogin == '' ? const LoginPage() : const HomePage(),
+            home: checkLogin == '' ? const LoginPage() : const BottomNavigatorBar(),
           );
         },
       ),
